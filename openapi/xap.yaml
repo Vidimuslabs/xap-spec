@@ -23,13 +23,19 @@ externalDocs:
   description: gRPC handshake service contract (proto/handshake.proto)
   url: https://github.com/Vidimuslabs/xap-spec/blob/main/proto/handshake.proto
 servers:
-  - url: https://api.vidimuslabs.com/xap/v1
+  - url: "{scheme}://{host}/xap/v1"
     description: >
-      PROPOSED — NOT YET PROVISIONED. The /xap/* route is not bound on the live
-      api.vidimuslabs.com zone; this URL is a documented contract for a future
-      reference deployment, not a live endpoint. XAP is an unreleased reference
-      implementation (see license: no rights granted). Issuance requires issuer
-      authority.
+      XAP is self-hosted: each operator runs their own instance and sets the host.
+      There is no Vidimus-hosted endpoint. Replace {host} with your deployment's
+      address (and {scheme} with http for local/dev). Issuance requires issuer
+      authority; verification requires none.
+    variables:
+      scheme:
+        default: https
+        enum: [https, http]
+      host:
+        default: localhost:8080
+        description: Your XAP server host and optional port (e.g. xap.internal.example.com).
 paths:
   /verify:
     post:
