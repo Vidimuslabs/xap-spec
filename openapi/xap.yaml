@@ -1,0 +1,120 @@
+openapi: 3.1.0
+info:
+  title: Execution Authority Protocol (XAP) — Verification & Issuance API
+  version: xap-1.0.0
+  description: >
+    HTTP surface for the Execution Authority Protocol. The verification surface
+    is public (verify receipts, fetch trust anchors, run conformance) and is
+    implementable with no access to enforcement point state (¶0017). The issuance
+    surface (issue/derive/revoke authority artifacts) is served only by the
+    private issuer and requires issuer authority.
+  license:
+    name: License terms pending. No rights granted.
+servers:
+  - url: https://api.vidimuslabs.com/xap/v1
+    description: Reference server (issuance requires issuer authority)
+paths:
+  /verify:
+    post:
+      summary: Independently verify a receipt (public)
+      operationId: verifyReceipt
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [receipt]
+              properties:
+                receipt: { type: string, description: COSE_Sign1 receipt, CBOR hex }
+                mat: { type: string, description: governing MAT envelope, CBOR hex }
+                context: { $ref: '#/components/schemas/RuntimeContext' }
+                prior_receipt: { type: string, description: prior receipt envelope, CBOR hex }
+                commitment: { type: string, description: governing commitment envelope, CBOR hex }
+      responses:
+        '200':
+          description: Verification result
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/VerificationResult' }
+  /anchors:
+    get:
+      summary: Fetch the trust anchor set (public)
+      operationId: getAnchors
+      responses:
+        '200':
+          description: Trust anchors
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Anchor' }
+  /digest:
+    post:
+      summary: Recompute a canonical runtime context digest (public)
+      operationId: computeDigest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RuntimeContext' }
+      responses:
+        '200':
+          description: Digest
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  digest_hex: { type: string }
+  /artifacts:
+    post:
+      summary: Issue a Machine Authority Token (issuer authority required — private)
+      operationId: issueArtifact
+      responses:
+        '201': { description: Issued MAT envelope (CBOR hex) }
+        '403': { description: Issuer authority required }
+  /artifacts/{id}/revoke:
+    post:
+      summary: Revoke an authority artifact (issuer authority required — private)
+      operationId: revokeArtifact
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Revocation recorded }
+        '403': { description: Issuer authority required }
+components:
+  schemas:
+    Anchor:
+      type: object
+      properties:
+        kid_hex: { type: string }
+        alg: { type: string, enum: [ed25519, ecdsa-p256] }
+        pub_hex: { type: string }
+    RuntimeContext:
+      type: object
+      required: [time]
+      properties:
+        time: { type: string, format: date-time }
+        network_zone: { type: string }
+        params: { type: object, additionalProperties: { type: number } }
+        resource_state: { type: object, additionalProperties: { type: string } }
+        risk_score: { type: integer }
+        rate: { type: object, additionalProperties: { type: integer } }
+    VerificationResult:
+      type: object
+      properties:
+        valid: { type: boolean }
+        artifact_id: { type: string }
+        decision: { type: string, enum: [permit, deny, permit_with_controls] }
+        checks:
+          type: array
+          items:
+            type: object
+            properties:
+              name: { type: string }
+              pass: { type: boolean }
+              detail: { type: string }

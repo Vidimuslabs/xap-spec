@@ -1,0 +1,174 @@
+{
+  "version": "xap-1.0.0",
+  "anchors": [
+    {
+      "kid_hex": "6973737565722d31",
+      "alg": "ed25519",
+      "pub_hex": "d04ab232742bb4ab3a1368bd4615e4e6d0224ab71a016baf8520a332c9778737"
+    },
+    {
+      "kid_hex": "65702d31",
+      "alg": "ed25519",
+      "pub_hex": "a09aa5f47a6759802ff955f8dc2d2a14a5c99d23be97f864127ff9383455a4f0"
+    },
+    {
+      "kid_hex": "6167656e7441",
+      "alg": "ed25519",
+      "pub_hex": "17cb79fb2b4120f2b1ec65e4198d6e08b28e813feb01e4a400839b85e18080ce"
+    },
+    {
+      "kid_hex": "6167656e7442",
+      "alg": "ed25519",
+      "pub_hex": "d759793bbc13a2819a827c76adb6fba8a49aee007f49f2d0992d99b825ad2c48"
+    }
+  ],
+  "vectors": [
+    {
+      "name": "mat_valid",
+      "kind": "mat",
+      "description": "Well-formed MAT, valid issuer signature, within validity window",
+      "expect": "valid",
+      "mat_file": "mat_root.hex",
+      "at": "2026-07-01T00:00:00Z"
+    },
+    {
+      "name": "mat_expired",
+      "kind": "mat",
+      "description": "Valid signature but evaluated outside the validity interval (¶0065)",
+      "expect": "invalid",
+      "mat_file": "mat_root.hex",
+      "at": "2027-01-01T00:00:00Z"
+    },
+    {
+      "name": "mat_bad_sig",
+      "kind": "mat",
+      "description": "Tampered payload under a known key id; signature fails (¶0045)",
+      "expect": "invalid",
+      "expect_code": "ARTIFACT_SIGNATURE_FAILURE",
+      "mat_file": "mat_bad_sig.hex",
+      "at": "2026-07-01T00:00:00Z"
+    },
+    {
+      "name": "delegation_valid",
+      "kind": "delegation",
+      "description": "Child MAT satisfies all four monotonic invariants (¶0057)",
+      "expect": "valid",
+      "mat_file": "mat_child_valid.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "delegation_boundary_exceed",
+      "kind": "delegation",
+      "description": "Child boundary exceeds parent (invariant ii, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_bad.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "canon_context",
+      "kind": "canon",
+      "description": "Canonical digest of a runtime context is stable (¶0018, ¶0085)",
+      "expect": "valid",
+      "context_file": "ctx_permit.json",
+      "expect_digest_hex": "67c92afd84b6500a17480bd054511f883f1e057f2ad310dfa16bdb4f12f12a2c"
+    },
+    {
+      "name": "receipt_permit",
+      "kind": "receipt",
+      "description": "Valid permit receipt; context digest and constraint outcomes recompute (¶0095)",
+      "expect": "valid",
+      "receipt_file": "receipt_permit.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_permit.json"
+    },
+    {
+      "name": "receipt_deny",
+      "kind": "receipt",
+      "description": "Valid deny receipt carrying a signature-bound rationale code (¶0046, ¶0084)",
+      "expect": "valid",
+      "expect_code": "ARTIFACT_SCOPE_EXCEEDANCE",
+      "receipt_file": "receipt_deny.hex",
+      "mat_file": "mat_root.hex"
+    },
+    {
+      "name": "receipt_tampered_context",
+      "kind": "receipt",
+      "description": "Signature valid but context digest does not match reproduced context",
+      "expect": "invalid",
+      "receipt_file": "receipt_tampered_ctx.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_permit.json"
+    },
+    {
+      "name": "receipt_broken_chain",
+      "kind": "receipt",
+      "description": "prior_hash does not equal hash of the prior receipt (¶0063)",
+      "expect": "invalid",
+      "receipt_file": "receipt_broken_chain.hex",
+      "prior_receipt_file": "receipt_permit.hex"
+    },
+    {
+      "name": "receipt_compact",
+      "kind": "receipt",
+      "description": "Compact receipt profile verifies from minimum fields (¶0080)",
+      "expect": "valid",
+      "receipt_file": "receipt_compact.hex"
+    },
+    {
+      "name": "commitment_valid_binding",
+      "kind": "commitment_binding",
+      "description": "Commitment constraint digest matches governing MAT (¶0084A)",
+      "expect": "valid",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_A.hex"
+    },
+    {
+      "name": "commitment_binding_mismatch",
+      "kind": "commitment_binding",
+      "description": "Constraint digest computed from a different constraint set (¶0084A)",
+      "expect": "invalid",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_mismatch.hex"
+    },
+    {
+      "name": "commitment_action_violation",
+      "kind": "receipt",
+      "description": "Receipt records an action outside the declared set (¶0083 Commitment Violation)",
+      "expect": "valid",
+      "expect_code": "COMMITMENT_ACTION_VIOLATION",
+      "receipt_file": "receipt_action_violation.hex",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_A.hex"
+    },
+    {
+      "name": "commitment_revoked",
+      "kind": "receipt",
+      "description": "In-set action blocked after commitment revocation (¶0083 Commitment Revocation)",
+      "expect": "valid",
+      "expect_code": "COMMITMENT_REVOCATION",
+      "receipt_file": "receipt_revoked.hex",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_A.hex"
+    },
+    {
+      "name": "provenance_chain",
+      "kind": "provenance",
+      "description": "Two-agent commitment chain reconstructs from receipts alone (¶0084A)",
+      "expect": "valid",
+      "receipt_files": [
+        "receipt_prov_A.hex",
+        "receipt_prov_B.hex"
+      ]
+    },
+    {
+      "name": "provenance_broken",
+      "kind": "provenance",
+      "description": "Provenance chain with a broken link fails reconstruction (¶0084A)",
+      "expect": "invalid",
+      "receipt_files": [
+        "receipt_prov_A.hex",
+        "receipt_prov_B_broken.hex"
+      ]
+    }
+  ]
+}
