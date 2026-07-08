@@ -1,0 +1,81 @@
+// XAP handshake service — gRPC transport binding contract.
+//
+// This is a NORMATIVE, public artifact: the gRPC counterpart to the OpenAPI
+// definition in ../openapi/xap.yaml. The protocol is transport-agnostic (¶0086);
+// this .proto defines the gRPC binding of the handshake state machine (FIG. 3,
+// ¶0043, ¶0092) so a client can be generated in any language. The server
+// implementation is private (xap-engine); a client is generated from this file.
+//
+// Regenerate the private server stubs from this file with:
+//   protoc -I xap-spec/proto \
+//     --go_out=xap-engine/handshake/handshakepb --go_opt=paths=source_relative \
+//     --go-grpc_out=xap-engine/handshake/handshakepb --go-grpc_opt=paths=source_relative \
+//     xap-spec/proto/handshake.proto
+
+syntax = "proto3";
+
+package xap.handshake.v1;
+
+option go_package = "github.com/Vidimuslabs/xap-engine/handshake/handshakepb";
+
+// Handshake drives the AMIAP/XAP handshake to establish an execution-authority
+// session: capability (with protocol-version negotiation) → challenge (session
+// nonce) → proof (bound to the challenge) → authority conveyance → constraint
+// negotiation (monotonic rule) → receipt binding.
+service Handshake {
+  // Capability negotiates a mutually supported protocol version and opens a
+  // session. INVALID_ARGUMENT if there is no mutual version.
+  rpc Capability(CapabilityRequest) returns (CapabilityResponse);
+  // Challenge issues the session-binding freshness nonce.
+  rpc Challenge(SessionRequest) returns (ChallengeResponse);
+  // Proof submits integrity proof bound to the challenge nonce.
+  // PERMISSION_DENIED if the nonce is not the issued challenge (replay).
+  rpc Proof(ProofRequest) returns (StateResponse);
+  // Authority conveys the signed authority artifact (MAT) as the negotiation
+  // baseline.
+  rpc Authority(AuthorityRequest) returns (StateResponse);
+  // Negotiate applies a proposed constraint set under the monotonic rule.
+  // FAILED_PRECONDITION if it would relax a constraint or expand a boundary.
+  rpc Negotiate(NegotiateRequest) returns (StateResponse);
+  // Bind completes the handshake (receipt binding).
+  rpc Bind(SessionRequest) returns (StateResponse);
+}
+
+message CapabilityRequest {
+  // Protocol versions supported by the caller (e.g. "xap-1.0.0").
+  repeated string versions = 1;
+}
+
+message CapabilityResponse {
+  string session_id = 1;
+  string version = 2; // the negotiated version
+  string state = 3;   // handshake state after this step
+}
+
+message SessionRequest {
+  string session_id = 1;
+}
+
+message ChallengeResponse {
+  bytes nonce = 1; // session-binding freshness nonce
+  string state = 2;
+}
+
+message ProofRequest {
+  string session_id = 1;
+  bytes nonce = 2; // must equal the issued challenge nonce
+}
+
+message AuthorityRequest {
+  string session_id = 1;
+  bytes mat = 2; // COSE_Sign1 authority artifact (MAT) envelope
+}
+
+message NegotiateRequest {
+  string session_id = 1;
+  bytes constraints = 2; // canonical CBOR of the proposed constraint set
+}
+
+message StateResponse {
+  string state = 1; // handshake state after this step
+}
