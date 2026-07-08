@@ -8,8 +8,20 @@ info:
     implementable with no access to enforcement point state (¶0017). The issuance
     surface (issue/derive/revoke authority artifacts) is served only by the
     private issuer and requires issuer authority.
+
+
+    Transport-agnostic protocol (¶0086): this document defines the HTTP binding
+    of the verification and issuance surface. The AMIAP/XAP handshake (FIG. 3,
+    ¶0043) has two reference transport bindings over one shared state machine —
+    an HTTP binding and a gRPC binding. The gRPC binding's normative service
+    contract is `proto/handshake.proto` (see externalDocs); a client may be
+    generated from it in any language, exactly as an HTTP client is generated
+    from this document.
   license:
     name: License terms pending. No rights granted.
+externalDocs:
+  description: gRPC handshake service contract (proto/handshake.proto)
+  url: https://github.com/Vidimuslabs/xap-spec/blob/main/proto/handshake.proto
 servers:
   - url: https://api.vidimuslabs.com/xap/v1
     description: Reference server (issuance requires issuer authority)
