@@ -98,8 +98,171 @@ paths:
       responses:
         '200': { description: Revocation recorded }
         '403': { description: Issuer authority required }
+
+  # Handshake — HTTP binding of the transport-agnostic handshake state machine
+  # (FIG. 3, ¶0043, ¶0092). The same handshake is available over gRPC; see
+  # externalDocs (proto/handshake.proto). Envelopes and constraint sets are CBOR
+  # hex; nonces are hex.
+  /handshake/capability:
+    post:
+      tags: [handshake]
+      summary: Negotiate a protocol version and open a session (¶0083 addition)
+      operationId: handshakeCapability
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [versions]
+              properties:
+                versions:
+                  type: array
+                  items: { type: string }
+                  description: Protocol versions the caller supports (e.g. "xap-1.0.0").
+      responses:
+        '200':
+          description: Session opened; version negotiated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  session_id: { type: string }
+                  version: { type: string }
+                  state: { $ref: '#/components/schemas/HandshakeState' }
+        '400': { description: No mutually supported protocol version }
+  /handshake/{sid}/challenge:
+    post:
+      tags: [handshake]
+      summary: Issue the session-binding freshness nonce
+      operationId: handshakeChallenge
+      parameters: [{ $ref: '#/components/parameters/Sid' }]
+      responses:
+        '200':
+          description: Challenge nonce issued
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nonce: { type: string, description: Session-binding nonce (hex) }
+                  state: { $ref: '#/components/schemas/HandshakeState' }
+        '404': { description: Unknown session }
+        '409': { description: Not allowed in the current state }
+  /handshake/{sid}/proof:
+    post:
+      tags: [handshake]
+      summary: Submit integrity proof bound to the challenge nonce
+      operationId: handshakeProof
+      parameters: [{ $ref: '#/components/parameters/Sid' }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nonce]
+              properties:
+                nonce: { type: string, description: Must equal the issued challenge nonce (hex) }
+      responses:
+        '200':
+          description: Proof accepted
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/HandshakeStateResponse' }
+        '403': { description: Proof not bound to the issued challenge (replay) }
+        '404': { description: Unknown session }
+  /handshake/{sid}/authority:
+    post:
+      tags: [handshake]
+      summary: Convey the signed authority artifact (MAT) as the negotiation baseline
+      operationId: handshakeAuthority
+      parameters: [{ $ref: '#/components/parameters/Sid' }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [mat]
+              properties:
+                mat: { type: string, description: COSE_Sign1 MAT envelope (CBOR hex) }
+      responses:
+        '200':
+          description: Authority conveyed
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/HandshakeStateResponse' }
+        '404': { description: Unknown session }
+        '409': { description: Not allowed in the current state }
+  /handshake/{sid}/negotiate:
+    post:
+      tags: [handshake]
+      summary: Apply a proposed constraint set under the monotonic rule (¶0043)
+      operationId: handshakeNegotiate
+      parameters: [{ $ref: '#/components/parameters/Sid' }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [constraints]
+              properties:
+                constraints: { type: string, description: Canonical CBOR of the proposed constraint set (hex) }
+      responses:
+        '200':
+          description: Constraints narrowed
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/HandshakeStateResponse' }
+        '404': { description: Unknown session }
+        '409': { description: Monotonic-rule violation (relaxes a constraint or expands a boundary) }
+  /handshake/{sid}/bind:
+    post:
+      tags: [handshake]
+      summary: Complete the handshake (receipt binding)
+      operationId: handshakeBind
+      parameters: [{ $ref: '#/components/parameters/Sid' }]
+      responses:
+        '200':
+          description: Handshake bound
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/HandshakeStateResponse' }
+        '404': { description: Unknown session }
+        '409': { description: Not allowed in the current state }
+  /handshake/{sid}:
+    get:
+      tags: [handshake]
+      summary: Report the current handshake state
+      operationId: handshakeStatus
+      parameters: [{ $ref: '#/components/parameters/Sid' }]
+      responses:
+        '200':
+          description: Current state
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/HandshakeStateResponse' }
+        '404': { description: Unknown session }
 components:
+  parameters:
+    Sid:
+      name: sid
+      in: path
+      required: true
+      schema: { type: string }
+      description: Handshake session identifier.
   schemas:
+    HandshakeState:
+      type: string
+      description: Handshake state machine states (¶0092).
+      enum: [init, capability, challenged, proven, authorized, negotiated, bound, failed]
+    HandshakeStateResponse:
+      type: object
+      properties:
+        state: { $ref: '#/components/schemas/HandshakeState' }
     Anchor:
       type: object
       properties:
