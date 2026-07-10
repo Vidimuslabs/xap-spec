@@ -130,8 +130,11 @@ type DigestAlg string
 const DigestSHA256 DigestAlg = "sha-256"
 
 // SignatureAlg names a registered signature algorithm. Ed25519 is the reference
-// algorithm; the signer/verifier interface admits ECDSA P-256 and HSM-backed
-// signers (¶0066, FIG. 14).
+// algorithm; the signer/verifier interface admits ECDSA P-256, a post-quantum
+// hybrid, and HSM-backed signers (¶0066, FIG. 14). Adding a value is the
+// registry-agility extension point and does not change the protocol version:
+// the envelope stays COSE_Sign1 over the canonical payload and existing
+// artifacts verify unchanged.
 type SignatureAlg string
 
 const (
@@ -139,7 +142,26 @@ const (
 	SigEd25519 SignatureAlg = "ed25519"
 	// SigECDSAP256 is a registered alternative (interface-reserved).
 	SigECDSAP256 SignatureAlg = "ecdsa-p256"
+	// SigHybridECDSAP384MLDSA65 is the post-quantum hybrid: a composite of
+	// ECDSA P-384 (over SHA-384) and ML-DSA-65 (FIPS 204), verified
+	// both-must-pass. It carries the whole portfolio's transition posture
+	// (matching the CVEAR/AGIV/AIRAP receipts). The composite occupies the single
+	// COSE_Sign1 signature slot as the 96-byte ECDSA r‖s followed by the ML-DSA-65
+	// signature, under the private-use COSE algorithm id -65537 (private-use is
+	// deliberate: the IETF composite-ML-DSA COSE code points are still draft).
+	SigHybridECDSAP384MLDSA65 SignatureAlg = "hybrid-ecdsa-p384-ml-dsa-65"
 )
+
+// COSEAlgHybridECDSAP384MLDSA65 is the COSE algorithm identifier carried in the
+// protected header of a SigHybridECDSAP384MLDSA65 envelope. It is drawn from the
+// COSE private-use range (< -65536) so it can never be invalidated by a future
+// IANA registration for composite ML-DSA. See SPEC.md §11.
+const COSEAlgHybridECDSAP384MLDSA65 = -65537
+
+// HybridECDSAP384SigLen is the fixed length, in bytes, of the ECDSA P-384 half
+// (raw r‖s, 48 bytes each) that prefixes the composite hybrid signature. The
+// remainder of the composite is the ML-DSA-65 signature.
+const HybridECDSAP384SigLen = 96
 
 // LifecycleState is an authority artifact lifecycle state (FIG. 13, ¶0065).
 // Revoked and Expired are unconditionally rejected.
