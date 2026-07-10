@@ -227,6 +227,10 @@ generator signs the hybrid vectors deterministically (RFC 6979 for the ECDSA
 half, deterministic ML-DSA) so every vector — classical and hybrid — reproduces
 byte-for-byte.
 
+Measured latency and size characteristics of the reference implementation
+(non-normative) are in [`PERFORMANCE.md`](PERFORMANCE.md): a full hybrid issuance
+runs in ~1 % of a typical `latency_bound` budget.
+
 ---
 
 Zenodo paper: DOI [10.5281/zenodo.21144476](https://doi.org/10.5281/zenodo.21144476).
