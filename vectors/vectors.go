@@ -33,10 +33,18 @@ type Manifest struct {
 
 // Anchor is a trust anchor: a key identifier, its signature algorithm, and the
 // public key, all hex-encoded where binary.
+//
+// For single-algorithm anchors (ed25519, ecdsa-p256) PubHex holds the one public
+// key. For the hybrid-ecdsa-p384-ml-dsa-65 anchor, PubHex holds the ECDSA P-384
+// public key (SPKI DER) and MLDSAPubHex holds the raw ML-DSA-65 public key; a
+// verifier admits the receipt only if both halves verify (both-must-pass).
 type Anchor struct {
 	KIDHex string `json:"kid_hex"`
 	Alg    string `json:"alg"`
 	PubHex string `json:"pub_hex"`
+	// MLDSAPubHex is the ML-DSA-65 public key for a hybrid anchor; empty for
+	// single-algorithm anchors.
+	MLDSAPubHex string `json:"mldsa_pub_hex,omitempty"`
 }
 
 // Vector describes one conformance scenario. Kind selects how a runner
