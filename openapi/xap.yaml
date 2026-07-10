@@ -278,8 +278,9 @@ components:
       type: object
       properties:
         kid_hex: { type: string }
-        alg: { type: string, enum: [ed25519, ecdsa-p256] }
-        pub_hex: { type: string }
+        alg: { type: string, enum: [ed25519, ecdsa-p256, hybrid-ecdsa-p384-ml-dsa-65] }
+        pub_hex: { type: string, description: 'public key; for the hybrid, the ECDSA P-384 SPKI DER (ML-DSA-65 key in mldsa_pub_hex)' }
+        mldsa_pub_hex: { type: string, description: 'ML-DSA-65 public key for a hybrid anchor; absent for single-algorithm anchors' }
     RuntimeContext:
       type: object
       required: [time]

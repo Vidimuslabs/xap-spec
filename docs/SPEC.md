@@ -13,8 +13,12 @@ the amended specification governs.
 
 The protocol is independent of wire format and transport (¶0082, ¶0086). This
 reference build uses deterministic CBOR (RFC 8949 §4.2 Core Deterministic
-Encoding) for canonicalization, COSE_Sign1 for signature envelopes, Ed25519 for
-signatures, and SHA-256 for digests.
+Encoding) for canonicalization, COSE_Sign1 for signature envelopes, Ed25519 as
+the reference signature algorithm, and SHA-256 for digests. Signature and digest
+algorithms are drawn from registries (§11, ¶0018/0066): the registries admit
+alternatives — including a post-quantum hybrid — without changing the protocol
+version, because the envelope shape (COSE_Sign1 over the canonical payload) is
+invariant across the algorithm choice.
 
 ---
 
@@ -181,12 +185,47 @@ record.
 | `COMMITMENT_ACTION_VIOLATION` | proposed action outside declared set (¶0083) |
 | `COMMITMENT_REVOCATION` | commitment revoked; all actions blocked (¶0083) |
 
-## 11. Conformance
+## 11. Registered cryptographic algorithms (¶0018, ¶0066)
+
+Digest and signature algorithms are named by registry so an implementation can
+recompute digests and verify signatures deterministically. Registries are
+append-only within a protocol version; adding an algorithm is not a version
+change, because the canonical encoding and the COSE_Sign1 envelope shape are
+invariant across the choice.
+
+**Digest algorithms.** `sha-256` (reference), used wherever a digest appears.
+
+**Signature algorithms.**
+
+| Name | COSE alg | Signature slot | Notes |
+|------|---------|----------------|-------|
+| `ed25519` | `-8` (EdDSA) | 64-byte Ed25519 | reference algorithm (¶0066) |
+| `ecdsa-p256` | `-7` (ES256) | ASN.1 ECDSA | registered alternative; HSM/KMS-friendly |
+| `hybrid-ecdsa-p384-ml-dsa-65` | `-65537` (private use) | `ECDSA-P384(SHA-384) r‖s` (96 B) `‖ ML-DSA-65` | post-quantum hybrid, **both-must-pass** |
+
+The **hybrid** carries the classical and post-quantum signatures in the single
+COSE_Sign1 signature slot as a fixed-layout composite: the first 96 bytes are the
+ECDSA P-384 signature (over SHA-384 of the canonical payload) as raw `r‖s`, 48
+bytes each; the remainder is the ML-DSA-65 (FIPS 204) signature over the same
+payload. A verifier splits at 96 bytes and accepts only if **both** halves verify
+against the anchor's ECDSA P-384 and ML-DSA-65 public keys — an attacker must
+forge both schemes. The COSE algorithm id is taken from the private-use range
+(`< -65536`) so it cannot collide with, or be invalidated by, a future IANA
+registration for composite ML-DSA (still an IETF draft). The hybrid gives XAP the
+same post-quantum posture as the CVEAR/AGIV/AIRAP authority artifacts. Classical
+and post-quantum private keys may be held under independent custody (e.g. the
+ECDSA half in an HSM, the ML-DSA half in software).
+
+## 12. Conformance
 
 The `vectors/` directory holds golden vectors with an expected-outcome manifest.
 A conforming implementation reproduces every expected outcome. The reference SDK
 (`xap-go`) does so via `xap vectors run`; engine-issued receipts verify against
 the same SDK — the two-implementation cross-check for independent verifiability.
+Hybrid anchors carry two public keys (ECDSA P-384 SPKI + ML-DSA-65); the
+generator signs the hybrid vectors deterministically (RFC 6979 for the ECDSA
+half, deterministic ML-DSA) so every vector — classical and hybrid — reproduces
+byte-for-byte.
 
 ---
 

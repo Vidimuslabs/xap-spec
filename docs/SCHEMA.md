@@ -9,7 +9,11 @@ canonical vectors' digests. This mirrors the frozen-schema discipline used for
 prior protocol version strings.
 
 Canonicalization: RFC 8949 §4.2 Core Deterministic Encoding. Signature envelope:
-COSE_Sign1. Signature alg: Ed25519 (registry-agile). Digest: SHA-256
+COSE_Sign1. Signature alg: Ed25519 reference, registry-agile — the registry also
+admits `ecdsa-p256` and the post-quantum hybrid `hybrid-ecdsa-p384-ml-dsa-65`
+(ECDSA P-384 + ML-DSA-65, both-must-pass, one COSE_Sign1 slot; see SPEC.md §11).
+A registry addition does not change this version: the envelope and canonical
+encoding are invariant across the algorithm choice. Digest: SHA-256
 (registry-agile). CBOR keys are the `cbor:"..."` tags below; field declaration
 order is **not** significant (deterministic encoding sorts map keys).
 
