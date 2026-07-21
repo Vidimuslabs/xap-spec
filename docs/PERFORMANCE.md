@@ -9,14 +9,24 @@ which an enforcement point evaluates against its own configured budget.
 
 ## How to reproduce
 
+**Conformance correctness (public).** The reference verifier replays every
+conformance vector in this repository:
+
 ```
-# End-to-end issuance + signer latency (both algorithms):
-go test ./engine/ -bench=. -benchmem -run=^$        # in xap-engine
+go run github.com/Vidimuslabs/xap-go/cmd/xap vectors run
 ```
 
-The signature and digest algorithms are registry-selectable (SPEC § 11); the
-enforcement pipeline is algorithm-agnostic, so the Ed25519 → hybrid delta is
-exactly the added cost of the post-quantum hybrid.
+**Verify-side latency (public).** The in-browser verifier at
+[vidimuslabs.com/verify](https://www.vidimuslabs.com/verify) times a real hybrid
+receipt on the visitor's own hardware — a self-measured verify latency you can
+reproduce yourself.
+
+**Issuance / full-pipeline latency (internal).** The end-to-end issuance and
+signer figures below are benchmarked in the enforcement engine (`go test ./engine/
+-bench=. -benchmem`), which is the licensed, private component. The signature and
+digest algorithms are registry-selectable (SPEC § 11) and the pipeline is
+algorithm-agnostic, so the Ed25519 → hybrid delta is exactly the added cost of the
+post-quantum hybrid.
 
 ## Indicative results
 

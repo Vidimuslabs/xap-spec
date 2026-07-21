@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you reference the Execution Authority Protocol (XAP), please cite it as below."
+title: "XAP — Execution Authority Protocol: Reference Specification"
+abstract: >-
+  The Execution Authority Protocol (XAP) governs execution authority for
+  autonomous machine actions: an enforcement point verifies a signed authority
+  artifact, evaluates constraints against runtime context at execution time,
+  makes a ternary decision, and emits a signed, independently verifiable
+  execution receipt. This repository holds the normative specification, the
+  frozen xap-1.0.0 wire schema, protocol constants, and conformance vectors.
+type: software
+version: "xap-1.0.0"
+authors:
+  - family-names: Samb
+    given-names: Papa Gora
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.21144476
+    description: The XAP reference paper.
+doi: 10.5281/zenodo.21144476
+url: "https://doi.org/10.5281/zenodo.21144476"
+repository-code: "https://github.com/Vidimuslabs/xap-spec"
+keywords:
+  - execution authority
+  - autonomous AI governance
+  - verifiable execution receipt
+  - post-quantum cryptography
+  - machine-to-machine security
