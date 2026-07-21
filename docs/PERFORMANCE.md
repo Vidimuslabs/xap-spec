@@ -1,8 +1,8 @@
 # XAP — Performance (non-normative)
 
 This document reports measured performance characteristics of the **reference
-implementation** (the `xap-go` verify SDK and the `xap-engine` enforcement
-pipeline). It is **non-normative**: performance is a property of an
+implementation** (the `xap-go` verify SDK and the enforcement engine). It is
+**non-normative**: performance is a property of an
 implementation and its host, not of the protocol. The protocol's only timing
 requirement is the per-decision `latency_bound` constraint (§ SPEC 5, ¶0077),
 which an enforcement point evaluates against its own configured budget.
@@ -22,8 +22,9 @@ receipt on the visitor's own hardware — a self-measured verify latency you can
 reproduce yourself.
 
 **Issuance / full-pipeline latency (internal).** The end-to-end issuance and
-signer figures below are benchmarked in the enforcement engine (`go test ./engine/
--bench=. -benchmem`), which is the licensed, private component. The signature and
+signer figures below are measured with Go benchmarks in the enforcement engine —
+the licensed, private component — so they are reported here rather than
+independently reproducible. The signature and
 digest algorithms are registry-selectable (SPEC § 11) and the pipeline is
 algorithm-agnostic, so the Ed25519 → hybrid delta is exactly the added cost of the
 post-quantum hybrid.
@@ -95,5 +96,5 @@ Before any public performance claim (website, datasheet):
 1. Regenerate on representative production-class hardware, not a dev machine.
 2. Include **HSM/KMS-inclusive** issuance numbers, or state clearly that the
    figures are in-process and that HSM custody adds device latency.
-3. Publish the methodology (the command above) and figures as **ranges**, so a
-   customer reproduces them rather than being surprised.
+3. Publish the methodology and figures as **ranges**, so a customer reproduces
+   them rather than being surprised.
