@@ -16,6 +16,7 @@ builds).
 ```sh
 cosign verify \
   --key xap-server-cosign.pub \
+  --insecure-ignore-tlog=true \
   ghcr.io/vidimuslabs/xap-server@sha256:<digest>
 ```
 
