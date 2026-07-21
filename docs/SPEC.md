@@ -12,9 +12,10 @@ to the governing text. Where this document and the amended specification differ,
 the amended specification governs.
 
 The protocol is independent of wire format and transport (¶0082, ¶0086). This
-reference build uses deterministic CBOR (RFC 8949 §4.2 Core Deterministic
-Encoding) for canonicalization, COSE_Sign1 for signature envelopes, Ed25519 as
-the reference signature algorithm, and SHA-256 for digests. Signature and digest
+reference build uses deterministic CBOR ([RFC 8949](https://www.rfc-editor.org/rfc/rfc8949)
+§4.2 Core Deterministic Encoding) for canonicalization, COSE_Sign1
+([RFC 9052](https://www.rfc-editor.org/rfc/rfc9052)) for signature envelopes,
+Ed25519 as the reference signature algorithm, and SHA-256 for digests. Signature and digest
 algorithms are drawn from registries (§11, ¶0018/0066): the registries admit
 alternatives — including a post-quantum hybrid — without changing the protocol
 version, because the envelope shape (COSE_Sign1 over the canonical payload) is
@@ -206,7 +207,7 @@ invariant across the choice.
 The **hybrid** carries the classical and post-quantum signatures in the single
 COSE_Sign1 signature slot as a fixed-layout composite: the first 96 bytes are the
 ECDSA P-384 signature (over SHA-384 of the canonical payload) as raw `r‖s`, 48
-bytes each; the remainder is the ML-DSA-65 (FIPS 204) signature over the same
+bytes each; the remainder is the ML-DSA-65 ([FIPS 204](https://csrc.nist.gov/pubs/fips/204/final)) signature over the same
 payload. A verifier splits at 96 bytes and accepts only if **both** halves verify
 against the anchor's ECDSA P-384 and ML-DSA-65 public keys — an attacker must
 forge both schemes. The COSE algorithm id is taken from the private-use range
@@ -223,7 +224,7 @@ A conforming implementation reproduces every expected outcome. The reference SDK
 (`xap-go`) does so via `xap vectors run`; engine-issued receipts verify against
 the same SDK — the two-implementation cross-check for independent verifiability.
 Hybrid anchors carry two public keys (ECDSA P-384 SPKI + ML-DSA-65); the
-generator signs the hybrid vectors deterministically (RFC 6979 for the ECDSA
+generator signs the hybrid vectors deterministically ([RFC 6979](https://www.rfc-editor.org/rfc/rfc6979) for the ECDSA
 half, deterministic ML-DSA) so every vector — classical and hybrid — reproduces
 byte-for-byte.
 

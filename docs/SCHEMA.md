@@ -8,8 +8,9 @@ within a major version only if they are `omitempty` and absent from all existing
 canonical vectors' digests. This mirrors the frozen-schema discipline used for
 prior protocol version strings.
 
-Canonicalization: RFC 8949 §4.2 Core Deterministic Encoding. Signature envelope:
-COSE_Sign1. Signature alg: Ed25519 reference, registry-agile — the registry also
+Canonicalization: [RFC 8949](https://www.rfc-editor.org/rfc/rfc8949) §4.2 Core
+Deterministic Encoding. Signature envelope: COSE_Sign1
+([RFC 9052](https://www.rfc-editor.org/rfc/rfc9052)). Signature alg: Ed25519 reference, registry-agile — the registry also
 admits `ecdsa-p256` and the post-quantum hybrid `hybrid-ecdsa-p384-ml-dsa-65`
 (ECDSA P-384 + ML-DSA-65, both-must-pass, one COSE_Sign1 slot; see SPEC.md §11).
 A registry addition does not change this version: the envelope and canonical
