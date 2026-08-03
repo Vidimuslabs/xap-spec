@@ -78,6 +78,9 @@ Context digest = SHA-256 over the canonical context (¶0018).
 v                    string
 id                   string
 artifact_id          string
+action               string?  the operation decided (¶0097 "reference to an
+                              execution request or operation")
+resource             string?  the operation's resource target
 decision             string   permit | deny | permit_with_controls
 controls             []string?
 context_digest       bytes    (32, SHA-256)
@@ -103,6 +106,14 @@ parent_commitment_digest}`.
 
 The enforcement point signature is the COSE_Sign1 envelope over the canonical
 receipt payload.
+
+`action` and `resource` are optional so that receipts predating them still decode
+and so selective disclosure (¶0071, ¶0079) can withhold them. When both are
+absent a verifier reports the scope check as *not performed* rather than passed:
+without the operation there is nothing to evaluate the execution scope against,
+and pipeline step 2 (¶0046) — whose exceedance denies unconditionally regardless
+of every constraint outcome — would otherwise be the one gate no independent
+party could reproduce.
 
 ## Commitment Object — ¶0095B
 
