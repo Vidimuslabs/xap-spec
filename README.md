@@ -47,7 +47,14 @@ patent-pending.
 
 ## License
 
-See [`LICENSE.md`](LICENSE.md). License terms pending; no rights granted.
+Specification content is licensed **CC-BY-4.0**. XAP is patent-pending and
+intended to be **royalty-free to implement** — see
+[`LICENSE.md`](LICENSE.md) for the scope of that position, the trademark
+reservation, and the as-is disclaimer, and
+[vidimuslabs.com/ip](https://vidimuslabs.com/ip) for the public statement. The
+formal grant instrument is in preparation; until then that position describes
+intent rather than an executed grant. No freedom-to-operate clearance is given
+or implied.
 
 ---
 
