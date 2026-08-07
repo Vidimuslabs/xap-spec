@@ -10,6 +10,7 @@ abstract: >-
   frozen xap-1.0.0 wire schema, protocol constants, and conformance vectors.
 type: software
 version: "xap-1.0.0"
+license: CC-BY-4.0
 authors:
   - family-names: Samb
     given-names: Papa Gora

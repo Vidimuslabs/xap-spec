@@ -18,7 +18,8 @@ info:
     generated from it in any language, exactly as an HTTP client is generated
     from this document.
   license:
-    name: License terms pending. No rights granted.
+    name: CC-BY-4.0
+    identifier: CC-BY-4.0
 externalDocs:
   description: gRPC handshake service contract (proto/handshake.proto)
   url: https://github.com/Vidimuslabs/xap-spec/blob/main/proto/handshake.proto
