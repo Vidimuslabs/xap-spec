@@ -159,11 +159,23 @@ public trust anchors — performs:
 3. Check evaluation timing is within the recorded bound.
 4. If the MAT is supplied: validate its signature and structure, and confirm the
    receipt's artifact id binds to it.
-5. If the reproduced context is supplied: recompute the context digest and
+5. If the MAT is supplied and the receipt names the operation: **recompute the
+   scope and boundary check** (¶0046, pipeline step 2). Confirm the receipt's
+   `action` and `resource` fall within the MAT's execution scope and permission
+   boundary. A receipt recording any decision other than `deny` for an operation
+   outside scope **fails verification** — exceedance denies unconditionally,
+   regardless of every constraint outcome, so a receipt that permits an
+   out-of-scope operation is self-inconsistent. A `deny` of an out-of-scope
+   operation is consistent and passes. When the receipt omits both `action` and
+   `resource` (selective disclosure, ¶0071, ¶0079, or issuers predating those
+   fields), report this check as **not performed** rather than passed: there is
+   no operation to evaluate against, and silently passing would convert the one
+   unconditional gate into an unverifiable assertion.
+6. If the reproduced context is supplied: recompute the context digest and
    compare; recompute each recorded constraint outcome and compare; check
    decision consistency.
-6. If a prior receipt is supplied: confirm the chain link.
-7. If a commitment is supplied: validate its signature, verify its binding to the
+7. If a prior receipt is supplied: confirm the chain link.
+8. If a commitment is supplied: validate its signature, verify its binding to the
    MAT, and confirm the receipt's commitment digest.
 
 Verification succeeds using only the receipt, reproduced inputs, and public
