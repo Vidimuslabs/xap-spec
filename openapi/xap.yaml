@@ -11,7 +11,7 @@ info:
 
 
     Transport-agnostic protocol (¶0086): this document defines the HTTP binding
-    of the verification and issuance surface. The AMIAP/XAP handshake (FIG. 3,
+    of the verification and issuance surface. The XAP handshake (FIG. 3,
     ¶0043) has two reference transport bindings over one shared state machine —
     an HTTP binding and a gRPC binding. The gRPC binding's normative service
     contract is `proto/handshake.proto` (see externalDocs); a client may be

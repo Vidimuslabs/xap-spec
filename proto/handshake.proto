@@ -18,7 +18,7 @@ package xap.handshake.v1;
 
 option go_package = "github.com/Vidimuslabs/xap-engine/handshake/handshakepb";
 
-// Handshake drives the AMIAP/XAP handshake to establish an execution-authority
+// Handshake drives the XAP handshake to establish an execution-authority
 // session: capability (with protocol-version negotiation) → challenge (session
 // nonce) → proof (bound to the challenge) → authority conveyance → constraint
 // negotiation (monotonic rule) → receipt binding.
