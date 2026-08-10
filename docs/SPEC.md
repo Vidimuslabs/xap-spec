@@ -169,6 +169,13 @@ either satisfies the letter of "subset" while widening authority:
   narrower. Treating the child's list as a set and testing membership reads that
   omission as the empty set — vacuously a subset — and admits an escalation. If
   the parent constrains a dimension, the child **must** constrain it too.
+- **The same rule binds every dimension, not only scope.** A child may not drop
+  a resource quota its parent set (an absent quota is an unstated one, not a
+  smaller one), may not empty a constraint's value set while keeping its ID (the
+  empty set is trivially a subset, so this would neutralise the constraint while
+  satisfying invariant iii), and a root permitting delegation **must state a
+  depth** — an unstated `max_depth` is not unlimited, or the shallowest possible
+  statement would produce the deepest possible grant.
 - **Resource containment is not a prefix test on an un-normalized string.** A
   parent pattern `svc/*` textually covers `svc/../db/main`, which resolves
   outside `svc` entirely, so a traversal segment converts a narrowing pattern
