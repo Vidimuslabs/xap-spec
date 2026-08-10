@@ -135,6 +135,23 @@ passing check asserts a gate never applied; pipeline step 2 (¶0046), whose
 exceedance denies unconditionally regardless of every constraint outcome, would
 otherwise be the one gate no independent party could reproduce.
 
+`commitment_compliance` records what the enforcement point checked when a
+commitment governs. Three of its booleans — `commitment_check`, `scope_check`,
+`boundary_check` — are facts an independent party recomputes from the commitment
+and the governing MAT, and **a verifier MUST recompute them rather than read them
+back**. A structure whose whole purpose is to let someone check the enforcement
+point's work cannot itself be taken on that point's word; otherwise a receipt may
+claim `scope_check = true` for an action plainly outside its MAT's scope and
+nothing contradicts it.
+
+The comparison is **symmetric**, unlike the scope check above. A denial excuses
+*acting* on an out-of-scope operation; it does not excuse *claiming* to have run
+a check that would have returned the opposite answer. An assertion about a
+reproducible fact is either correct or false, and the decision it accompanies
+does not change which. `constraint_outcome` is the exception: it needs the
+runtime context, and is reproduced by the constraint-outcome comparison of §9
+when that context is supplied.
+
 ## Commitment Object — ¶0095B
 
 ```
