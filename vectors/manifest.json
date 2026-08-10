@@ -88,6 +88,30 @@
       "parent_mat_file": "mat_root.hex"
     },
     {
+      "name": "delegation_resource_traversal",
+      "kind": "delegation",
+      "description": "Child resource pattern escapes the parent scope by traversal (invariant i, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_traversal.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "delegation_quota_dropped",
+      "kind": "delegation",
+      "description": "Child drops a resource quota its parent set (invariant ii, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_no_quota.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "delegation_constraint_neutralised",
+      "kind": "delegation",
+      "description": "Child keeps a constraint id while emptying its value set (invariant iii, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_neutralised.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
       "name": "delegation_boundary_exceed",
       "kind": "delegation",
       "description": "Child boundary exceeds parent (invariant ii, ¶0057)",
@@ -177,6 +201,14 @@
       "expect_code": "ARTIFACT_SCOPE_EXCEEDANCE",
       "receipt_file": "receipt_scope_denied.hex",
       "mat_file": "mat_root.hex"
+    },
+    {
+      "name": "scope_unset_permits_nothing",
+      "kind": "receipt",
+      "description": "Permit under a MAT whose scope is unset; absence permits nothing (¶0046)",
+      "expect": "invalid",
+      "receipt_file": "receipt_unset_scope.hex",
+      "mat_file": "mat_child_empty_scope.hex"
     },
     {
       "name": "commitment_valid_binding",
