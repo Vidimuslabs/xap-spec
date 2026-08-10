@@ -1,5 +1,12 @@
 # xap-spec
 
+[![ci](https://img.shields.io/github/actions/workflow/status/Vidimuslabs/xap-spec/ci.yml?branch=main&style=flat-square&logo=github&logoColor=C9A961&labelColor=475569&label=ci)](https://github.com/Vidimuslabs/xap-spec/actions/workflows/ci.yml)
+[![protocol](https://img.shields.io/badge/protocol-xap--1.0.0-2D5F4F?style=flat-square&labelColor=475569)](docs/SPEC.md)
+[![wire schema](https://img.shields.io/badge/wire_schema-frozen-2D5F4F?style=flat-square&labelColor=475569)](docs/SCHEMA.md)
+[![signatures](https://img.shields.io/badge/signatures-hybrid_post--quantum-2D5F4F?style=flat-square&labelColor=475569)](docs/SPEC.md)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.21144476-2D5F4F?style=flat-square&labelColor=475569)](https://doi.org/10.5281/zenodo.21144476)
+[![spec license](https://img.shields.io/badge/spec-CC--BY--4.0-2D5F4F?style=flat-square&labelColor=475569)](LICENSE.md)
+
 The normative specification, protocol constants, and canonical conformance
 vectors for the **Execution Authority Protocol (XAP)**, protocol version
 `xap-1.0.0`.
