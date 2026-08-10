@@ -138,6 +138,39 @@
       "receipt_file": "receipt_compact.hex"
     },
     {
+      "name": "receipt_scope_in_scope",
+      "kind": "receipt",
+      "description": "Permit receipt names an operation inside the MAT execution scope (¶0046)",
+      "expect": "valid",
+      "receipt_file": "receipt_scope_in.hex",
+      "mat_file": "mat_root.hex"
+    },
+    {
+      "name": "receipt_scope_action_exceeded",
+      "kind": "receipt",
+      "description": "Receipt permits an ACTION outside the MAT execution scope (¶0046)",
+      "expect": "invalid",
+      "receipt_file": "receipt_scope_action_exceeded.hex",
+      "mat_file": "mat_root.hex"
+    },
+    {
+      "name": "receipt_scope_resource_exceeded",
+      "kind": "receipt",
+      "description": "Receipt permits an operation on a RESOURCE outside the MAT execution scope (¶0046)",
+      "expect": "invalid",
+      "receipt_file": "receipt_scope_resource_exceeded.hex",
+      "mat_file": "mat_root.hex"
+    },
+    {
+      "name": "receipt_scope_denied_out_of_scope",
+      "kind": "receipt",
+      "description": "Deny receipt for an out-of-scope operation is consistent and verifies (¶0046)",
+      "expect": "valid",
+      "expect_code": "ARTIFACT_SCOPE_EXCEEDANCE",
+      "receipt_file": "receipt_scope_denied.hex",
+      "mat_file": "mat_root.hex"
+    },
+    {
       "name": "commitment_valid_binding",
       "kind": "commitment_binding",
       "description": "Commitment constraint digest matches governing MAT (¶0084A)",
