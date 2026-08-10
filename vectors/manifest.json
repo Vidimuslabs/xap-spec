@@ -207,6 +207,61 @@
       "commitment_file": "commitment_A.hex"
     },
     {
+      "name": "receipt_constraint_failure",
+      "kind": "receipt",
+      "description": "Deny on a constraint that recomputes to false from the reproduced context (¶0047, ¶0084)",
+      "expect": "valid",
+      "expect_code": "CONSTRAINT_EVALUATION_FAILURE",
+      "receipt_file": "receipt_constraint_fail.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_zone_fail.json"
+    },
+    {
+      "name": "receipt_constraint_timeout",
+      "kind": "receipt",
+      "description": "Evaluation abandoned at the latency bound; elapsed_ms equals max_ms (¶0052)",
+      "expect": "valid",
+      "expect_code": "CONSTRAINT_EVALUATION_TIMEOUT",
+      "receipt_file": "receipt_timeout.hex",
+      "mat_file": "mat_root.hex"
+    },
+    {
+      "name": "receipt_integrity_evidence_failure",
+      "kind": "receipt",
+      "description": "Evidence fails its proof obligation; the reference records fresh=false (¶0048)",
+      "expect": "valid",
+      "expect_code": "INTEGRITY_EVIDENCE_FAILURE",
+      "receipt_file": "receipt_evidence_fail.hex",
+      "mat_file": "mat_root.hex"
+    },
+    {
+      "name": "commitment_scope_violation",
+      "kind": "receipt",
+      "description": "Commitment declares an action outside the governing MAT's scope (¶0095A)",
+      "expect": "valid",
+      "expect_code": "COMMITMENT_SCOPE_VIOLATION",
+      "receipt_file": "receipt_commit_scope_violation.hex",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_overclaim.hex"
+    },
+    {
+      "name": "commitment_bad_signature",
+      "kind": "commitment_binding",
+      "description": "Commitment payload tampered under a known key id (¶0095A)",
+      "expect": "invalid",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_bad_sig.hex"
+    },
+    {
+      "name": "receipt_commitment_signature_failure",
+      "kind": "receipt",
+      "description": "Deny carrying the commitment-signature-failure code (¶0095A, ¶0084)",
+      "expect": "valid",
+      "expect_code": "COMMITMENT_OBJECT_SIGNATURE_FAILURE",
+      "receipt_file": "receipt_commit_sig_fail.hex",
+      "mat_file": "mat_root.hex"
+    },
+    {
       "name": "provenance_chain",
       "kind": "provenance",
       "description": "Two-agent commitment chain reconstructs from receipts alone (¶0084A)",
