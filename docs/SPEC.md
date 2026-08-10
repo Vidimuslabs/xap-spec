@@ -181,6 +181,25 @@ public trust anchors — performs:
 Verification succeeds using only the receipt, reproduced inputs, and public
 anchors — **never** enforcement point internal state (¶0017).
 
+**Integrity proof validation is not reproducible, and a verifier must not report
+it as verified.** Pipeline step 4 (§5, ¶0048) validates integrity evidence
+against the MAT's proof obligations, freshness included, at execution time. From
+the signed structures a verifier can reproduce two things: that every category in
+the MAT's `proof_obligations` appears among the receipt's `evidence_refs`, and
+that each such reference records `fresh = true`. It cannot reproduce the
+freshness determination. `EvidenceRef` carries `{category, digest, fresh}` and no
+timestamp, so `max_age_seconds` has no input to evaluate against — `fresh` is the
+enforcement point's assertion about a liveness observation made at execution time
+and not re-observable from the receipt afterwards. Neither can the evidence
+itself be checked, the receipt carrying only a digest of it.
+
+Implementations **MAY** perform the two reproducible checks. The reference
+verifier does not yet, so a receipt whose evidence fails to cover its obligations
+is not currently rejected on that basis. What no implementation may do is present
+step 4 as independently verified: of the six pipeline stages it is the one an
+outside party takes on trust, and saying so is the difference between a bounded
+claim and an overstated one.
+
 ## 10. Rationale / error / rejection code registry (¶0084 addition)
 
 All codes appearing in a receipt are signature-bound and part of the verifiable
