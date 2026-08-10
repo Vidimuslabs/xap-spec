@@ -91,7 +91,20 @@ The order is normative, and the unconditional-denial semantics are load-bearing:
 
 Latency-bounded evaluation (FIG. 4A, ¶0051–0053): a maximum evaluation latency
 bound; a per-constraint-type timeout path (degraded / deny-with-timeout /
-suspend); elapsed time recorded in every receipt. Race handling (¶0054–0055):
+suspend); elapsed time recorded in every receipt.
+
+**A timeout receipt records `elapsed_ms` equal to `max_ms`, never greater.**
+Evaluation is abandoned *at* the bound, so the bound is reached and not
+exceeded; the timeout is signalled by the `CONSTRAINT_EVALUATION_TIMEOUT`
+rationale code and the disposition, never by `elapsed_ms` running past `max_ms`.
+This is normative because the alternative is unverifiable: a verifier checks
+`elapsed_ms <= max_ms` (§9 step 3), so a receipt recording elapsed beyond the
+bound could never verify, and the protocol would be unable to express a truthful
+timeout at all. A receipt whose `elapsed_ms` exceeds `max_ms` is therefore
+malformed regardless of which codes it carries. Conformance vector:
+`receipt_constraint_timeout`.
+
+Race handling (¶0054–0055):
 optimistic concurrency by default (resource state digest in the receipt), with
 pessimistic-lock and speculative interfaces; conflict resolution serializes,
 backs off, or denies both — all with rationale codes.
