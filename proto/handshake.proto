@@ -6,17 +6,25 @@
 // ¶0043, ¶0092) so a client can be generated in any language. The server
 // implementation is private (xap-engine); a client is generated from this file.
 //
-// Regenerate the private server stubs from this file with:
-//   protoc -I xap-spec/proto \
-//     --go_out=xap-engine/handshake/handshakepb --go_opt=paths=source_relative \
-//     --go-grpc_out=xap-engine/handshake/handshakepb --go-grpc_opt=paths=source_relative \
-//     xap-spec/proto/handshake.proto
+// Generate Go stubs from this file with:
+//   protoc -I proto \
+//     --go_out=proto --go_opt=paths=source_relative \
+//     --go-grpc_out=proto --go-grpc_opt=paths=source_relative \
+//     proto/handshake.proto
+// Plugins for other languages take the same contract; nothing here is Go-specific.
 
 syntax = "proto3";
 
 package xap.handshake.v1;
 
-option go_package = "github.com/Vidimuslabs/xap-engine/handshake/handshakepb";
+// go_package names this repository, not the private engine. The option declares
+// the canonical import path of the generated Go package, so pointing it at a
+// repository nobody can fetch left every external generator emitting stubs that
+// claim an unresolvable identity — and advertised the private engine's internal
+// layout in a normative public artifact. Output location is set by --go_out and
+// paths=source_relative, not by this option, so where you generate to is still
+// entirely your choice.
+option go_package = "github.com/Vidimuslabs/xap-spec/proto/handshakepb";
 
 // Handshake drives the XAP handshake to establish an execution-authority
 // session: capability (with protocol-version negotiation) → challenge (session
