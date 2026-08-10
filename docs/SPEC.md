@@ -6,10 +6,10 @@ This document transcribes the protocol layer of the Autonomous Machine Identity
 and Authority Protocol (AMIAP), also denominated the Execution Authority
 Protocol (XAP). It is a normative-intent description of message structures,
 processing sequences, and the verification algorithm. It is derived from and
-subordinate to the patent specification (`AMIAP_Specification.docx` as amended by
-`AMIAP_PRELIMINARY_AMENDMENT.docx`); paragraph anchors (¶NNNN) throughout point
-to the governing text. Where this document and the amended specification differ,
-the amended specification governs.
+subordinate to the patent specification of U.S. patent application 19/570,167,
+as amended by the preliminary amendment filed in that application; paragraph
+anchors (¶NNNN) throughout point to the governing text. Where this document and
+the amended specification differ, the amended specification governs.
 
 The protocol is independent of wire format and transport (¶0082, ¶0086). This
 reference build uses deterministic CBOR ([RFC 8949](https://www.rfc-editor.org/rfc/rfc8949)
