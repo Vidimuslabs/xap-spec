@@ -36,11 +36,29 @@ replay           ReplayProtection
 ```
 
 Sub-structures: `MachineIdentity{kind, public_key?, cert_ref?, attestation?,
-composite?}`; `ExecutionScope{actions?, resources?, policy?}`;
+composite?}`; `ExecutionScope{actions?, resources?, policy?, unconstrained?}`;
 `PermissionBoundary{max_impact, max_privilege_delta, resource_quotas?,
 exclusions?}`; `TrustVector{score?, level?}`; `ProofObligation{category,
 max_age_seconds}`; `DelegationRights{allowed, max_depth}`; `IssuerIdentity{id,
 kid?}`; `ReplayProtection{not_before, not_after, nonce, instance_id}`.
+
+`ExecutionScope.unconstrained` names the dimensions a scope deliberately does
+not restrict — `"actions"`, `"resources"`, or both. **An absent scope list
+permits nothing; permitting a whole dimension requires naming it here.**
+
+Absence is not a statement. Without this field an empty list has to mean either
+"nothing is permitted" or "everything is permitted", and whichever is chosen the
+other is what some issuer meant. Reading absence as "everything" makes the most
+permissive grant in the protocol the one requiring the least typing, and leaves
+an artifact that says nothing about a dimension indistinguishable from one that
+deliberately opened it. Delegation carries the same rule: a child may declare a
+dimension unconstrained only where its parent already did, and a child that
+enumerates a dimension its parent left unconstrained is narrowing, which is
+always permitted.
+
+Optional and `omitempty`, so it is absent from every canonical vector digest
+issued before it existed — what this document's own frozen-schema rule requires
+of a within-version addition.
 
 ## Constraint (portable constraint representation) — ¶0087
 
