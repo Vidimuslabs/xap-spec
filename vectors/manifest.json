@@ -80,6 +80,14 @@
       "parent_mat_file": "mat_root.hex"
     },
     {
+      "name": "delegation_scope_unset",
+      "kind": "delegation",
+      "description": "Child leaves scope unset, which is unconstrained, not a subset (invariant i, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_empty_scope.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
       "name": "delegation_boundary_exceed",
       "kind": "delegation",
       "description": "Child boundary exceeds parent (invariant ii, ¶0057)",
