@@ -160,6 +160,22 @@ A child MAT is a valid derivation of a parent iff all four hold:
 Plus acyclicity (¶0073) and delegation depth (¶0041 field 134). A derived
 artifact failing derivation proof validation is unconditionally rejected.
 
+Two rules make invariant (i) mean what it says, and an implementation that omits
+either satisfies the letter of "subset" while widening authority:
+
+- **An absent scope dimension is *unconstrained*, not empty.** A scope list that
+  is absent imposes no restriction on that dimension, so a child that simply
+  omits a dimension its parent constrained is **broader** than its parent, not
+  narrower. Treating the child's list as a set and testing membership reads that
+  omission as the empty set — vacuously a subset — and admits an escalation. If
+  the parent constrains a dimension, the child **must** constrain it too.
+- **Resource containment is not a prefix test on an un-normalized string.** A
+  parent pattern `svc/*` textually covers `svc/../db/main`, which resolves
+  outside `svc` entirely, so a traversal segment converts a narrowing pattern
+  into an escape. A resource containing a `..` path segment is covered by
+  nothing, in derivation and in the scope check of §9 step 5 alike. Whole
+  segments are matched, so ordinary names containing dots stay usable.
+
 ## 9. Verification algorithm (¶0095)
 
 An independent verifier, with the receipt, optionally the governing MAT and
@@ -179,11 +195,16 @@ public trust anchors — performs:
    outside scope **fails verification** — exceedance denies unconditionally,
    regardless of every constraint outcome, so a receipt that permits an
    out-of-scope operation is self-inconsistent. A `deny` of an out-of-scope
-   operation is consistent and passes. When the receipt omits both `action` and
-   `resource` (selective disclosure, ¶0071, ¶0079, or issuers predating those
-   fields), report this check as **not performed** rather than passed: there is
-   no operation to evaluate against, and silently passing would convert the one
-   unconditional gate into an unverifiable assertion.
+   operation is consistent and passes. Report this check as **not performed**
+   rather than passed whenever the receipt does not disclose enough to
+   re-evaluate every dimension the MAT constrains — that is, when the MAT
+   constrains actions and `action` is absent, or constrains resources and
+   `resource` is absent, or both are absent (selective disclosure, ¶0071,
+   ¶0079, or issuers predating those fields). **Partial disclosure is not a
+   pass.** A receipt naming an action while withholding its resource has had its
+   resource evaluated against nothing, and reporting that as a passing scope
+   check asserts a gate that was never applied — which is exactly what turns the
+   one unconditional gate into an unverifiable assertion.
 6. If the reproduced context is supplied: recompute the context digest and
    compare; recompute each recorded constraint outcome and compare; check
    decision consistency.
