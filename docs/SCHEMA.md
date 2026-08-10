@@ -126,12 +126,14 @@ The enforcement point signature is the COSE_Sign1 envelope over the canonical
 receipt payload.
 
 `action` and `resource` are optional so that receipts predating them still decode
-and so selective disclosure (¶0071, ¶0079) can withhold them. When both are
-absent a verifier reports the scope check as *not performed* rather than passed:
-without the operation there is nothing to evaluate the execution scope against,
-and pipeline step 2 (¶0046) — whose exceedance denies unconditionally regardless
-of every constraint outcome — would otherwise be the one gate no independent
-party could reproduce.
+and so selective disclosure (¶0071, ¶0079) can withhold them. A verifier reports
+the scope check as *not performed* rather than passed whenever the receipt does
+not disclose enough to re-evaluate a dimension the MAT enumerates — **partial
+disclosure is not a pass**. A receipt naming an action while withholding its
+resource has had its resource evaluated against nothing, and calling that a
+passing check asserts a gate never applied; pipeline step 2 (¶0046), whose
+exceedance denies unconditionally regardless of every constraint outcome, would
+otherwise be the one gate no independent party could reproduce.
 
 ## Commitment Object — ¶0095B
 
@@ -148,7 +150,7 @@ provenance        CommitmentProvenance?
 action_window     TemporalValidity?
 ```
 
-Sub-structures: `DeclaredActionSet{action_types, resources?, param_ranges?}`;
+Sub-structures: `DeclaredActionSet{action_types, resources?, param_ranges?, unconstrained?}`;
 `TemporalValidity{not_before, not_after}`; `CommitmentBinding{artifact_id,
 constraint_digest}` — `constraint_digest` MUST equal the governing MAT's
 constraint digest (Commitment Binding Verification, ¶0084A);
@@ -156,6 +158,23 @@ constraint digest (Commitment Binding Verification, ¶0084A);
 
 The agent signature is the COSE_Sign1 envelope over the canonical commitment
 payload.
+
+`DeclaredActionSet.unconstrained` carries the same vocabulary and the same rule
+as `ExecutionScope.unconstrained`: an absent list declares nothing, not
+everything. A structure whose whole purpose is to be a *bounded* enumeration
+must not become unbounded by omission.
+
+**A commitment narrows the authority it binds to.** Every action and resource it
+declares MUST be one the governing MAT authorizes, and it may not declare a
+dimension unconstrained where that MAT enumerates it — otherwise the marker
+would launder an escalation through the commitment layer instead of the
+delegation layer. A verifier reproduces this (`commitment_scope`), with the same
+asymmetry as the scope check: an over-claiming commitment invalidates a receipt
+that **permitted** under it, while a denial is the enforcement point doing
+exactly what ¶0095A requires and remains consistent. Without this the declared
+set is signed and carried but never evaluated, leaving
+`COMMITMENT_SCOPE_VIOLATION` a code an enforcement point asserts and no
+independent party can reach.
 
 ## Codes
 
