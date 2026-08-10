@@ -168,7 +168,15 @@ must not become unbounded by omission.
 declares MUST be one the governing MAT authorizes, and it may not declare a
 dimension unconstrained where that MAT enumerates it — otherwise the marker
 would launder an escalation through the commitment layer instead of the
-delegation layer. A verifier reproduces this (`commitment_scope`), with the same
+delegation layer. The same requirement binds `resource_targets` — a second resource list, separate
+from `declared_actions.resources`, and every bit as much an over-claim surface —
+and `param_ranges`: a declared range looser than the governing MAT's constraint
+of the same id is an over-claim wearing the costume of a self-restriction, since
+the commitment appears to bind the agent while relaxing what the MAT required. A
+range with no counterpart in the MAT is an additional restriction the agent
+chose and is always permitted.
+
+A verifier reproduces this (`commitment_scope`), with the same
 asymmetry as the scope check: an over-claiming commitment invalidates a receipt
 that **permitted** under it, while a denial is the enforcement point doing
 exactly what ¶0095A requires and remains consistent. Without this the declared
