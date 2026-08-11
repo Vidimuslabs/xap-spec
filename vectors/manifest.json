@@ -371,6 +371,46 @@
       "expect": "invalid",
       "mat_file": "mat_root.hex",
       "commitment_file": "commitment_payload_substituted.hex"
+    },
+    {
+      "name": "receipt_unknown_rationale_code",
+      "kind": "receipt",
+      "description": "Receipt carries a rationale code the §10 registry does not define (§9 step 2, ¶0084)",
+      "expect": "invalid",
+      "receipt_file": "receipt_unknown_code.hex",
+      "mat_file": "mat_root.hex"
+    },
+    {
+      "name": "receipt_timing_exceeds_bound",
+      "kind": "receipt",
+      "description": "Receipt records evaluation running past its authorized latency bound (§9 step 3, ¶0053)",
+      "expect": "invalid",
+      "receipt_file": "receipt_timing_exceeded.hex",
+      "mat_file": "mat_root.hex"
+    },
+    {
+      "name": "receipt_wrong_version",
+      "kind": "receipt",
+      "description": "Receipt declares a protocol version this schema is not (§9 step 2)",
+      "expect": "invalid",
+      "receipt_file": "receipt_wrong_version.hex",
+      "mat_file": "mat_root.hex"
+    },
+    {
+      "name": "receipt_invalid_decision",
+      "kind": "receipt",
+      "description": "Receipt records a decision outside the ternary set (§9 step 2, ¶0049)",
+      "expect": "invalid",
+      "receipt_file": "receipt_bad_decision.hex",
+      "mat_file": "mat_root.hex"
+    },
+    {
+      "name": "receipt_artifact_binding_mismatch",
+      "kind": "receipt",
+      "description": "Receipt's artifact id does not bind to the governing MAT supplied with it (§9 step 4)",
+      "expect": "invalid",
+      "receipt_file": "receipt_artifact_mismatch.hex",
+      "mat_file": "mat_root.hex"
     }
   ]
 }
