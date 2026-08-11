@@ -347,6 +347,30 @@
         "receipt_prov_A.hex",
         "receipt_prov_B_broken.hex"
       ]
+    },
+    {
+      "name": "receipt_bad_signature",
+      "kind": "receipt",
+      "description": "Tampered receipt payload under a known key id; signature fails (§9 step 1, ¶0045)",
+      "expect": "invalid",
+      "receipt_file": "receipt_bad_sig.hex",
+      "mat_file": "mat_root.hex"
+    },
+    {
+      "name": "receipt_payload_substituted",
+      "kind": "receipt",
+      "description": "A well-formed receipt payload placed in a signed envelope it was not signed into; only the signature refutes it (§9 step 1, ¶0045)",
+      "expect": "invalid",
+      "receipt_file": "receipt_payload_substituted.hex",
+      "mat_file": "mat_root.hex"
+    },
+    {
+      "name": "commitment_payload_substituted",
+      "kind": "commitment_binding",
+      "description": "A well-formed commitment payload in a signed envelope it was not signed into; binding to the MAT still holds, so only the signature refutes it (¶0095A)",
+      "expect": "invalid",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_payload_substituted.hex"
     }
   ]
 }
