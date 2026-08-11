@@ -667,6 +667,86 @@
       "receipt_file": "receipt_with_misbound_commitment.hex",
       "mat_file": "mat_root.hex",
       "commitment_file": "commitment_mismatch.hex"
+    },
+    {
+      "name": "delegation_resources_unstated",
+      "kind": "delegation",
+      "description": "Child states actions but omits the resource dimension its parent constrained (invariant i, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_resources_unstated.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "delegation_action_not_covered",
+      "kind": "delegation",
+      "description": "Child names an action outside its parent's execution scope (invariant i, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_action_not_covered.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "delegation_traversal_under_unconstrained_parent",
+      "kind": "delegation",
+      "description": "Child resource escapes by traversal even though the parent declared resources unconstrained (invariant i, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_open_traversal.hex",
+      "parent_mat_file": "mat_root_open_resources.hex"
+    },
+    {
+      "name": "delegation_privilege_delta_exceeded",
+      "kind": "delegation",
+      "description": "Child raises the privilege-delta ceiling above its parent's (invariant ii, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_priv_delta.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "delegation_quota_exceeded",
+      "kind": "delegation",
+      "description": "Child raises a quota above the parent's budget for the same resource (invariant ii, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_quota_exceeded.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "delegation_constraint_dropped",
+      "kind": "delegation",
+      "description": "Child omits a constraint its parent set, rather than narrowing it (invariant iii, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_constraint_dropped.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "delegation_constraint_type_mismatch",
+      "kind": "delegation",
+      "description": "Child keeps a constraint id while changing its type (invariant iii, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_type_mismatch.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "delegation_latency_bound_widened",
+      "kind": "delegation",
+      "description": "Child takes a longer evaluation budget than its parent allowed (invariant iii, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_latency_widened.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "delegation_param_bound_widened",
+      "kind": "delegation",
+      "description": "Child raises the upper bound on a constrained parameter (invariant iii, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_param_widened.hex",
+      "parent_mat_file": "mat_root_rich.hex"
+    },
+    {
+      "name": "delegation_resource_state_widened",
+      "kind": "delegation",
+      "description": "Child admits a resource state its parent excluded (invariant iii, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_state_widened.hex",
+      "parent_mat_file": "mat_root_rich.hex"
     }
   ]
 }
