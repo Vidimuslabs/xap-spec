@@ -625,6 +625,32 @@
       "expect": "valid",
       "receipt_file": "receipt_evidence_undisclosed.hex",
       "mat_file": "mat_root.hex"
+    },
+    {
+      "name": "receipt_governing_mat_unsigned",
+      "kind": "receipt",
+      "description": "Valid receipt presented with a governing MAT whose signature does not hold (§9 step 4)",
+      "expect": "invalid",
+      "receipt_file": "receipt_with_bad_mat.hex",
+      "mat_file": "mat_bad_sig.hex"
+    },
+    {
+      "name": "receipt_governing_commitment_unsigned",
+      "kind": "receipt",
+      "description": "Receipt presented with a commitment whose signature does not hold (§9 step 8, ¶0095A)",
+      "expect": "invalid",
+      "receipt_file": "receipt_with_unsigned_commitment.hex",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_payload_substituted.hex"
+    },
+    {
+      "name": "receipt_governing_commitment_misbound",
+      "kind": "receipt",
+      "description": "Receipt presented with a correctly signed commitment that does not bind to the governing MAT (§9 step 8, ¶0084A)",
+      "expect": "invalid",
+      "receipt_file": "receipt_with_misbound_commitment.hex",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_mismatch.hex"
     }
   ]
 }
