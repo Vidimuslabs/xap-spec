@@ -473,6 +473,70 @@
       "receipt_file": "receipt_boundary_lie.hex",
       "mat_file": "mat_root.hex",
       "commitment_file": "commitment_A.hex"
+    },
+    {
+      "name": "delegation_obligation_dropped",
+      "kind": "delegation",
+      "description": "Child omits a proof obligation its parent required, escaping the evidence it must produce (invariant iv, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_no_obligation.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "delegation_obligation_loosened",
+      "kind": "delegation",
+      "description": "Child keeps the obligation category but doubles the freshness window it must satisfy (invariant iv, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_stale_obligation.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "delegation_exclusion_dropped",
+      "kind": "delegation",
+      "description": "Child drops an exclusion its parent's permission boundary set (invariant ii, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_no_exclusion.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "delegation_quota_invented",
+      "kind": "delegation",
+      "description": "Child states a quota for a resource its parent never budgeted (invariant ii, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_invented_quota.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "delegation_temporal_widened",
+      "kind": "delegation",
+      "description": "Child's temporal window extends past its parent's (invariant iii, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_time_widened.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "delegation_rate_limit_unbounded",
+      "kind": "delegation",
+      "description": "Child keeps the rate-limit constraint while omitting its ceiling (invariant iii, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_rate_unbounded.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "delegation_unconstrained_escalation",
+      "kind": "delegation",
+      "description": "Child declares a scope dimension unconstrained where its parent enumerated it (invariant i, ¶0057)",
+      "expect": "invalid",
+      "mat_file": "mat_child_unconstrained.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
+      "name": "delegation_not_permitted",
+      "kind": "delegation",
+      "description": "Child derived from a parent that does not permit delegation, though every invariant holds (¶0057, ¶0041 field 134)",
+      "expect": "invalid",
+      "mat_file": "mat_child_undelegated.hex",
+      "parent_mat_file": "mat_root_no_delegation.hex"
     }
   ]
 }
