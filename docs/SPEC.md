@@ -234,12 +234,22 @@ enforcement point's assertion about a liveness observation made at execution tim
 and not re-observable from the receipt afterwards. Neither can the evidence
 itself be checked, the receipt carrying only a digest of it.
 
-Implementations **MAY** perform the two reproducible checks. The reference
-verifier does not yet, so a receipt whose evidence fails to cover its obligations
-is not currently rejected on that basis. What no implementation may do is present
-step 4 as independently verified: of the six pipeline stages it is the one an
-outside party takes on trust, and saying so is the difference between a bounded
-claim and an overstated one.
+Implementations **SHOULD** perform the two reproducible checks; the reference
+verifier does. Both follow the disclosure and asymmetry rules already established
+for the scope check in step 5. A receipt disclosing **no** evidence references at
+all has exercised selective disclosure (¶0071, ¶0079), and both checks are
+reported **not performed** rather than failed; once it discloses any, it is
+making a readable claim about coverage, and partial disclosure is not a pass. A
+receipt that **denies** on uncovered or stale evidence is the enforcement point
+doing what ¶0048 requires and is consistent; only a receipt recording a decision
+other than `deny` while its own references leave an obliged category unreferenced,
+or record `fresh = false`, **fails verification**.
+
+What no implementation may do is present step 4 as independently verified. These
+two checks establish that the receipt's account of its evidence is internally
+consistent with the artifact governing it — not that the evidence was good. Of
+the six pipeline stages this is the one an outside party takes on trust, and
+saying so is the difference between a bounded claim and an overstated one.
 
 ## 10. Rationale / error / rejection code registry (¶0084 addition)
 
