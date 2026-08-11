@@ -67,6 +67,12 @@ type Vector struct {
 	ContextFile      string   `json:"context_file,omitempty"`
 	PriorReceiptFile string   `json:"prior_receipt_file,omitempty"`
 	ReceiptFiles     []string `json:"receipt_files,omitempty"`
+	// MATFiles is a delegation chain ordered root-first, for kinds that walk a
+	// chain rather than a single parent→child step. A chain is not the
+	// concatenation of its steps: depth, acyclicity and chain structure are
+	// properties only the whole sequence has, and MATFile/ParentMATFile cannot
+	// express them.
+	MATFiles []string `json:"mat_files,omitempty"`
 	// ExpectDigestHex is the expected canonical digest for "canon" vectors.
 	ExpectDigestHex string `json:"expect_digest_hex,omitempty"`
 	// At is an RFC3339 evaluation instant for lifecycle checks.
