@@ -73,6 +73,15 @@ type Vector struct {
 	// properties only the whole sequence has, and MATFile/ParentMATFile cannot
 	// express them.
 	MATFiles []string `json:"mat_files,omitempty"`
+	// ExpectChecks pins the status of individual verification checks by name:
+	// "passed", "failed", or "not_performed". Expect alone states whether the
+	// receipt verifies, and a check reporting NOT PERFORMED is not a third
+	// overall outcome — the receipt verifies either way. §9 nonetheless
+	// requires an unavailable check to be reported as not performed rather
+	// than passed, because reporting it as passed asserts a gate that was
+	// never applied. Without this field that requirement is unpinnable: both
+	// readings produce a receipt that verifies.
+	ExpectChecks map[string]string `json:"expect_checks,omitempty"`
 	// ExpectDigestHex is the expected canonical digest for "canon" vectors.
 	ExpectDigestHex string `json:"expect_digest_hex,omitempty"`
 	// At is an RFC3339 evaluation instant for lifecycle checks.
