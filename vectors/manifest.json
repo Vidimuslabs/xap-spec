@@ -537,6 +537,70 @@
       "expect": "invalid",
       "mat_file": "mat_child_undelegated.hex",
       "parent_mat_file": "mat_root_no_delegation.hex"
+    },
+    {
+      "name": "delegation_chain_valid",
+      "kind": "delegation_chain",
+      "description": "Two derivations from a root allowing depth 2; every step and the chain itself hold (¶0041 field 134)",
+      "expect": "valid",
+      "mat_files": [
+        "mat_root.hex",
+        "mat_child_valid.hex",
+        "mat_grandchild.hex"
+      ]
+    },
+    {
+      "name": "delegation_chain_depth_exceeded",
+      "kind": "delegation_chain",
+      "description": "Third derivation from a root allowing depth 2; every step is valid and the chain is one link too long (¶0041 field 134)",
+      "expect": "invalid",
+      "mat_files": [
+        "mat_root.hex",
+        "mat_child_valid.hex",
+        "mat_grandchild.hex",
+        "mat_greatgrandchild.hex"
+      ]
+    },
+    {
+      "name": "delegation_chain_cycle",
+      "kind": "delegation_chain",
+      "description": "Chain revisits an artifact identity it has already authorized (¶0073)",
+      "expect": "invalid",
+      "mat_files": [
+        "mat_root.hex",
+        "mat_child_valid.hex",
+        "mat_child_cycle.hex"
+      ]
+    },
+    {
+      "name": "delegation_chain_root_without_depth",
+      "kind": "delegation_chain",
+      "description": "Root permits delegation without stating a depth; the derivation is otherwise valid (¶0041 field 134)",
+      "expect": "invalid",
+      "mat_files": [
+        "mat_root_open_depth.hex",
+        "mat_child_open_depth.hex"
+      ]
+    },
+    {
+      "name": "delegation_chain_broken_link",
+      "kind": "delegation_chain",
+      "description": "Chain omits an intermediate artifact, so a parent id does not match its predecessor",
+      "expect": "invalid",
+      "mat_files": [
+        "mat_root.hex",
+        "mat_grandchild.hex"
+      ]
+    },
+    {
+      "name": "delegation_chain_headless",
+      "kind": "delegation_chain",
+      "description": "Chain begins at a derived artifact rather than a root, hiding the authority above it",
+      "expect": "invalid",
+      "mat_files": [
+        "mat_child_valid.hex",
+        "mat_grandchild.hex"
+      ]
     }
   ]
 }
