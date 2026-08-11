@@ -411,6 +411,68 @@
       "expect": "invalid",
       "receipt_file": "receipt_artifact_mismatch.hex",
       "mat_file": "mat_root.hex"
+    },
+    {
+      "name": "receipt_constraint_outcome_falsified",
+      "kind": "receipt",
+      "description": "Receipt records a constraint as satisfied that recomputes to false from the reproduced context (§9 step 6, ¶0095)",
+      "expect": "invalid",
+      "receipt_file": "receipt_outcome_lie.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_zone_fail.json"
+    },
+    {
+      "name": "receipt_permit_under_failing_constraint",
+      "kind": "receipt",
+      "description": "Receipt permits while truthfully recording a constraint that failed (§9 step 6, ¶0047)",
+      "expect": "invalid",
+      "receipt_file": "receipt_inconsistent_permit.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_zone_fail.json"
+    },
+    {
+      "name": "receipt_unknown_constraint_outcome",
+      "kind": "receipt",
+      "description": "Receipt records an outcome for a constraint the governing MAT does not define (§9 step 6)",
+      "expect": "invalid",
+      "receipt_file": "receipt_phantom_constraint.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_permit.json"
+    },
+    {
+      "name": "receipt_scope_partial_disclosure",
+      "kind": "receipt",
+      "description": "Receipt discloses an action but withholds the resource; the scope check is not performed, not failed (§9 step 5, ¶0079)",
+      "expect": "valid",
+      "receipt_file": "receipt_partial_disclosure.hex",
+      "mat_file": "mat_root.hex"
+    },
+    {
+      "name": "receipt_commitment_digest_mismatch",
+      "kind": "receipt",
+      "description": "Receipt's commitment digest does not match the commitment presented with it (§9 step 8, ¶0084A)",
+      "expect": "invalid",
+      "receipt_file": "receipt_commit_digest_mismatch.hex",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_A.hex"
+    },
+    {
+      "name": "provenance_unbacked_by_commitment",
+      "kind": "receipt",
+      "description": "Receipt claims a parent while its governing commitment declares no provenance (¶0084A)",
+      "expect": "invalid",
+      "receipt_file": "receipt_prov_unbacked.hex",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_A.hex"
+    },
+    {
+      "name": "commitment_compliance_boundary_false_claim",
+      "kind": "receipt",
+      "description": "Receipt claims the permission-boundary check passed for an action the boundary excludes (¶0084A)",
+      "expect": "invalid",
+      "receipt_file": "receipt_boundary_lie.hex",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_A.hex"
     }
   ]
 }
