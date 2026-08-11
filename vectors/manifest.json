@@ -175,7 +175,10 @@
       "description": "Permit receipt names an operation inside the MAT execution scope (¶0046)",
       "expect": "valid",
       "receipt_file": "receipt_scope_in.hex",
-      "mat_file": "mat_root.hex"
+      "mat_file": "mat_root.hex",
+      "expect_checks": {
+        "scope_check": "passed"
+      }
     },
     {
       "name": "receipt_scope_action_exceeded",
@@ -200,7 +203,10 @@
       "expect": "valid",
       "expect_code": "ARTIFACT_SCOPE_EXCEEDANCE",
       "receipt_file": "receipt_scope_denied.hex",
-      "mat_file": "mat_root.hex"
+      "mat_file": "mat_root.hex",
+      "expect_checks": {
+        "scope_check": "passed"
+      }
     },
     {
       "name": "scope_unset_permits_nothing",
@@ -272,7 +278,10 @@
       "expect": "valid",
       "expect_code": "INTEGRITY_EVIDENCE_FAILURE",
       "receipt_file": "receipt_evidence_fail.hex",
-      "mat_file": "mat_root.hex"
+      "mat_file": "mat_root.hex",
+      "expect_checks": {
+        "evidence_asserted_fresh": "passed"
+      }
     },
     {
       "name": "commitment_scope_violation",
@@ -445,7 +454,10 @@
       "description": "Receipt discloses an action but withholds the resource; the scope check is not performed, not failed (§9 step 5, ¶0079)",
       "expect": "valid",
       "receipt_file": "receipt_partial_disclosure.hex",
-      "mat_file": "mat_root.hex"
+      "mat_file": "mat_root.hex",
+      "expect_checks": {
+        "scope_check": "not_performed"
+      }
     },
     {
       "name": "receipt_commitment_digest_mismatch",
@@ -624,7 +636,11 @@
       "description": "Receipt discloses no evidence references; the obligation checks are not performed, not failed (§9, ¶0071, ¶0079)",
       "expect": "valid",
       "receipt_file": "receipt_evidence_undisclosed.hex",
-      "mat_file": "mat_root.hex"
+      "mat_file": "mat_root.hex",
+      "expect_checks": {
+        "evidence_asserted_fresh": "not_performed",
+        "evidence_covers_obligations": "not_performed"
+      }
     },
     {
       "name": "receipt_governing_mat_unsigned",
