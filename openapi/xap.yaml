@@ -304,5 +304,9 @@ components:
             type: object
             properties:
               name: { type: string }
+              # pass is false only for status=failed. A check that could not be
+              # performed does not invalidate a receipt, so it reports true —
+              # which is why status carries the distinction §9 requires.
               pass: { type: boolean }
+              status: { type: string, enum: [passed, failed, not_performed] }
               detail: { type: string }
