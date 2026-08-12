@@ -105,12 +105,24 @@ context_digest       bytes    (32, SHA-256)
 rationale_codes      []string?
 constraint_outcomes  []ConstraintOutcome?
 evidence_refs        []EvidenceRef?
-policy_digest        bytes?   (constraint-compilation digest, ¶0076)
+policy_digest        bytes?   (constraint-compilation digest over the governing
+                              MAT's PORTABLE constraint set — the same value
+                              MAT.ConstraintDigest computes, ¶0076/¶0087)
 timing               Timing
-prior_hash           bytes?   (SHA-256 over prior receipt envelope, ¶0063)
+prior_hash           bytes?   (the prior receipt's DIGEST — SHA-256 over its
+                              canonical payload, not its envelope, ¶0063)
 resource_state_digest bytes?  (optimistic concurrency, ¶0054)
+resource_keys        []string? (the resource-state variables
+                              resource_state_digest covers; without them the
+                              digest is unreproducible, ¶0054)
 speculative          bool?    (¶0078)
+confirms             bytes?   (digest of the speculative receipt this one
+                              settles; a confirming receipt is never itself
+                              speculative, ¶0078)
 enforcement_point    string?
+enforcement_point_kid bytes?  (key id of the signer; the name alone binds to
+                              nothing, so it is checked against the verifying
+                              anchor's subject)
 commitment_digest    bytes?   (when a commitment governs, ¶0084A)
 commitment_compliance ActionCompliance?  (¶0084A)
 provenance           ProvenanceRef?      (multi-agent, ¶0084A)
