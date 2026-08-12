@@ -42,6 +42,12 @@ type Anchor struct {
 	KIDHex string `json:"kid_hex"`
 	Alg    string `json:"alg"`
 	PubHex string `json:"pub_hex"`
+	// Roles are the artifact kinds this key is trusted to sign: "issuer",
+	// "enforcement_point", "agent". A key is trusted for what it is registered
+	// for and nothing else — the protocol's three signing roles are distinct
+	// (¶0041 field 136, ¶0050, ¶0095B), and a raw public key carries no
+	// statement of its own purpose. An anchor naming no role may sign nothing.
+	Roles []string `json:"roles"`
 	// MLDSAPubHex is the ML-DSA-65 public key for a hybrid anchor; empty for
 	// single-algorithm anchors.
 	MLDSAPubHex string `json:"mldsa_pub_hex,omitempty"`
