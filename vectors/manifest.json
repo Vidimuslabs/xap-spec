@@ -149,7 +149,12 @@
       "expect": "valid",
       "receipt_file": "receipt_permit.hex",
       "mat_file": "mat_root.hex",
-      "context_file": "ctx_permit.json"
+      "context_file": "ctx_permit.json",
+      "expect_checks": {
+        "constraint_outcomes": "passed",
+        "controls_declared": "passed",
+        "timing_within_authorized_bound": "passed"
+      }
     },
     {
       "name": "receipt_deny",
@@ -168,6 +173,44 @@
       "receipt_file": "receipt_tampered_ctx.hex",
       "mat_file": "mat_root.hex",
       "context_file": "ctx_permit.json"
+    },
+    {
+      "name": "receipt_latency_unbounded",
+      "kind": "receipt",
+      "description": "receipt declares no latency bound under a MAT that authorizes 50ms (¶0088)",
+      "expect": "invalid",
+      "receipt_file": "receipt_latency_unbounded.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_permit.json",
+      "expect_checks": {
+        "timing_within_authorized_bound": "failed",
+        "timing_within_bound": "passed"
+      }
+    },
+    {
+      "name": "receipt_latency_widened",
+      "kind": "receipt",
+      "description": "receipt declares a 5000ms bound under a MAT authorizing 50ms (¶0088)",
+      "expect": "invalid",
+      "receipt_file": "receipt_latency_widened.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_permit.json",
+      "expect_checks": {
+        "timing_within_authorized_bound": "failed",
+        "timing_within_bound": "passed"
+      }
+    },
+    {
+      "name": "receipt_latency_unstated_by_mat",
+      "kind": "receipt",
+      "description": "governing MAT states no latency_bound; the authorized-bound check is not performed",
+      "expect": "valid",
+      "receipt_file": "receipt_no_latency.hex",
+      "mat_file": "mat_no_latency.hex",
+      "context_file": "ctx_permit.json",
+      "expect_checks": {
+        "timing_within_authorized_bound": "not_performed"
+      }
     },
     {
       "name": "receipt_permit_with_controls",
