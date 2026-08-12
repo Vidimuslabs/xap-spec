@@ -209,6 +209,125 @@
       }
     },
     {
+      "name": "receipt_enforcement_point_key_mismatch",
+      "kind": "receipt",
+      "description": "receipt names an enforcement point key other than the one that signed it",
+      "expect": "invalid",
+      "receipt_file": "receipt_ep_wrong_key.hex",
+      "expect_checks": {
+        "enforcement_point_binding": "failed"
+      }
+    },
+    {
+      "name": "receipt_enforcement_point_unnamed",
+      "kind": "receipt",
+      "description": "receipt names no enforcement point key id; the binding is not performed",
+      "expect": "valid",
+      "receipt_file": "receipt_ep_unnamed.hex",
+      "expect_checks": {
+        "enforcement_point_binding": "not_performed"
+      }
+    },
+    {
+      "name": "receipt_policy_digest_mismatch",
+      "kind": "receipt",
+      "description": "receipt was evaluated under a different constraint compilation than its MAT encodes (¶0076)",
+      "expect": "invalid",
+      "receipt_file": "receipt_policy_wrong.hex",
+      "mat_file": "mat_root.hex",
+      "expect_checks": {
+        "policy_digest": "failed"
+      }
+    },
+    {
+      "name": "receipt_policy_digest_absent",
+      "kind": "receipt",
+      "description": "receipt discloses no policy digest; the check is not performed",
+      "expect": "valid",
+      "receipt_file": "receipt_policy_absent.hex",
+      "mat_file": "mat_root.hex",
+      "expect_checks": {
+        "policy_digest": "not_performed"
+      }
+    },
+    {
+      "name": "receipt_resource_state_digest",
+      "kind": "receipt",
+      "description": "resource state digest recomputes over the keys the receipt names (¶0054)",
+      "expect": "valid",
+      "receipt_file": "receipt_rs_good.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_resource_state.json",
+      "expect_checks": {
+        "resource_state_digest": "passed"
+      }
+    },
+    {
+      "name": "receipt_resource_state_digest_mismatch",
+      "kind": "receipt",
+      "description": "resource state digest does not match the reproduced state of the keys it names",
+      "expect": "invalid",
+      "receipt_file": "receipt_rs_bad.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_resource_state.json",
+      "expect_checks": {
+        "resource_state_digest": "failed"
+      }
+    },
+    {
+      "name": "receipt_resource_state_keys_undisclosed",
+      "kind": "receipt",
+      "description": "digest carried without the keys it covers; unreproducible, so not performed",
+      "expect": "valid",
+      "receipt_file": "receipt_rs_nokeys.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_resource_state.json",
+      "expect_checks": {
+        "resource_state_digest": "not_performed"
+      }
+    },
+    {
+      "name": "receipt_replay_fresh",
+      "kind": "receipt",
+      "description": "verifier holds a seen-set and has not seen this artifact before (field 138)",
+      "expect": "valid",
+      "receipt_file": "receipt_replay.hex",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_A.hex",
+      "replay": "fresh",
+      "expect_checks": {
+        "commitment_session_unseen": "passed",
+        "replay_nonce_unseen": "passed"
+      }
+    },
+    {
+      "name": "receipt_replay_unchecked",
+      "kind": "receipt",
+      "description": "verifier keeps no seen-set, so freshness is not performed rather than assumed",
+      "expect": "valid",
+      "receipt_file": "receipt_replay.hex",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_A.hex",
+      "expect_checks": {
+        "commitment_session_unseen": "not_performed",
+        "replay_nonce_unseen": "not_performed"
+      }
+    },
+    {
+      "name": "receipt_replayed",
+      "kind": "receipt",
+      "description": "verifier has already accepted this MAT nonce and commitment session",
+      "expect": "invalid",
+      "receipt_file": "receipt_replay.hex",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_A.hex",
+      "replay": "seen",
+      "expect_checks": {
+        "commitment_session_unseen": "failed",
+        "replay_nonce_unseen": "failed"
+      }
+    },
+    {
       "name": "receipt_evaluated_after_expiry",
       "kind": "receipt",
       "description": "receipt records an evaluation four years after its governing MAT expired (¶0065)",

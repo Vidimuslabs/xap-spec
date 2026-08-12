@@ -73,6 +73,16 @@ type Vector struct {
 	ContextFile      string   `json:"context_file,omitempty"`
 	PriorReceiptFile string   `json:"prior_receipt_file,omitempty"`
 	ReceiptFiles     []string `json:"receipt_files,omitempty"`
+	// Replay selects the verifier-side seen-set a runner supplies (¶0017 forbids
+	// enforcement-point state, not the verifier's own):
+	//
+	//   ""      no seen-set; the replay checks report not performed
+	//   "fresh" an empty seen-set; the artifact has not been seen
+	//   "seen"  a seen-set already holding this artifact's replay identifiers
+	//
+	// Freshness is the one property no signed artifact can carry, so it is the
+	// one check a vector cannot express through its files alone.
+	Replay string `json:"replay,omitempty"`
 	// MATFiles is a delegation chain ordered root-first, for kinds that walk a
 	// chain rather than a single parent→child step. A chain is not the
 	// concatenation of its steps: depth, acyclicity and chain structure are
