@@ -48,6 +48,11 @@ type Anchor struct {
 	// (¶0041 field 136, ¶0050, ¶0095B), and a raw public key carries no
 	// statement of its own purpose. An anchor naming no role may sign nothing.
 	Roles []string `json:"roles"`
+	// Subject is the identity the operator asserts this key belongs to. It is
+	// what makes a receipt's self-declared enforcement point name checkable: the
+	// enforcement point picks both the name and the key, so only a statement
+	// from outside can bind them.
+	Subject string `json:"subject,omitempty"`
 	// MLDSAPubHex is the ML-DSA-65 public key for a hybrid anchor; empty for
 	// single-algorithm anchors.
 	MLDSAPubHex string `json:"mldsa_pub_hex,omitempty"`

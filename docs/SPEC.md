@@ -398,10 +398,14 @@ fixed rather than documented:
 - `resource_state_digest` is now accompanied by `resource_keys`, naming the
   variables it covers. The digest was unreproducible only because the subset was
   undisclosed. Verified in step 6.
-- `enforcement_point` is now accompanied by `enforcement_point_kid`, bound to the
-  key that signed the receipt — the same binding step 4 applies to a MAT's issuer
-  identity. A name with nothing to bind it to is a label; a name with a key is
-  evidence. Verified in step 2.
+- `enforcement_point` is bound to the identity the OPERATOR registered for the
+  signing key. A receipt cannot bind its own name — the enforcement point picks
+  both the name it writes and the key it signs with, so comparing the two
+  compares its own choices. Binding needs a statement from outside, and the
+  anchor set is the operator's statement about keys. Where an anchor records no
+  subject the name is unverifiable and reports NOT PERFORMED: there the missing
+  input is the operator's, which is the distinction §9.1 draws below. Verified
+  in step 2.
 - Replay is checked against a record of receipts the relying party has already
   **acted on**, keyed on the receipt digest. ¶0017 forbids relying on
   ENFORCEMENT-POINT state; it says nothing about the verifier's own, and a party
