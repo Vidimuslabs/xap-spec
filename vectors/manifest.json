@@ -155,12 +155,28 @@
       "context_file": "ctx_permit.json"
     },
     {
+      "name": "receipt_chain_link",
+      "kind": "receipt",
+      "description": "prior_hash equals the prior receipt's digest, so the chain links (¶0063)",
+      "expect": "valid",
+      "receipt_file": "receipt_chained.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_permit.json",
+      "prior_receipt_file": "receipt_permit.hex",
+      "expect_checks": {
+        "chain_link": "passed"
+      }
+    },
+    {
       "name": "receipt_broken_chain",
       "kind": "receipt",
-      "description": "prior_hash does not equal hash of the prior receipt (¶0063)",
+      "description": "prior_hash does not equal the prior receipt's digest (¶0063)",
       "expect": "invalid",
       "receipt_file": "receipt_broken_chain.hex",
-      "prior_receipt_file": "receipt_permit.hex"
+      "prior_receipt_file": "receipt_permit.hex",
+      "expect_checks": {
+        "chain_link": "failed"
+      }
     },
     {
       "name": "receipt_compact",
