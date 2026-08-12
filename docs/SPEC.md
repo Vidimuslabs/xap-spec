@@ -21,6 +21,16 @@ alternatives — including a post-quantum hybrid — without changing the protoc
 version, because the envelope shape (COSE_Sign1 over the canonical payload) is
 invariant across the algorithm choice.
 
+Canonicalization is a **verification** requirement and not only an encoding
+convention. An implementation MUST reject input that decodes successfully but is
+not in canonical form — map keys out of the sorted order RFC 8949 §4.2 requires,
+or integers at non-minimal width — as well as the encodings that change meaning
+(duplicate keys, indefinite-length items, invalid UTF-8). Ordering and width
+change only the bytes, which is precisely why they matter: the protocol
+identifies artifacts by digests over those bytes, and a digest is an identity
+only when one value has exactly one encoding. Re-encoding a decoded value and
+requiring byte equality is sufficient, since canonical encoding is a function.
+
 ---
 
 ## 1. Protocol category
@@ -145,8 +155,24 @@ signature (in the envelope). **When a commitment governs:** commitment digest an
 a commitment compliance field (¶0084A). Compact profile (¶0080) and selective
 disclosure (¶0071/¶0079) are supported.
 
-The chain link is SHA-256 over the prior receipt's signed envelope; an
-append-only log cannot delete or reorder receipts without breaking the chain.
+The chain link is the prior receipt's **digest** — SHA-256 over its canonical
+payload — so an append-only log cannot delete or reorder receipts without
+breaking the chain.
+
+It is deliberately **not** a hash of the signed envelope. A COSE_Sign1 envelope
+has no unique encoding for a given receipt: ECDSA admits both `(r, s)` and
+`(r, n−s)`, and the COSE unprotected header bucket is by construction outside
+the signature, so a third party holding no key material can produce a second,
+byte-distinct envelope that verifies as the same receipt. A link over envelope
+bytes therefore lets a log holder manufacture "the chain broke" about receipts
+nobody tampered with, and cannot serve as a dedup or replay key. Restricting
+signatures to low-`s` would not be sufficient on its own; the header bucket is
+malleable independently of the signature algorithm.
+
+The payload is what the signature covers and what canonicalization pins to one
+encoding, which is what makes it an identity. Implementations **MUST** reject a
+payload that decodes but is not in canonical form (§ canonicalization); a digest
+identifies a value only when that value has exactly one encoding.
 
 ## 8. Delegation invariants (FIG. 5, ¶0057)
 
@@ -189,12 +215,48 @@ An independent verifier, with the receipt, optionally the governing MAT and
 reproduced context, the prior receipt, and the governing commitment — and the
 public trust anchors — performs:
 
-1. Validate the receipt signature.
+1. Validate the receipt signature. An artifact verifies only against a trust
+   anchor **registered for that artifact kind** — issuer for a MAT, enforcement
+   point for a receipt, agent for a commitment object. The three signing roles
+   are distinct (¶0041 field 136, ¶0050, ¶0095B) and a raw public key states no
+   purpose of its own, so an anchor set that does not record the role trusts
+   every key for everything, and an agent's key can mint the authority that
+   agent operates under. An anchor naming no role signs nothing.
 2. Check version, ternary decision validity, and that all rationale/error codes
-   are registered (§10).
-3. Check evaluation timing is within the recorded bound.
+   are registered (§10). Check that the receipt's declared controls match its
+   decision: `permit_with_controls` **MUST** name at least one control, and no
+   other decision may name any. `permit_with_controls` is the only decision that
+   may permit an operation whose constraints did not all hold, and the controls
+   are what compensate (¶0049); a receipt claiming the decision and naming no
+   control claims the exemption without the thing that earns it.
+3. Check evaluation timing. Three separate questions, and a verifier answers as
+   many as its inputs allow:
+   (a) elapsed is within the bound the **receipt** declares — self-consistency,
+   since both values come from the artifact under judgement;
+   (b) the receipt's timing agrees with itself — `complete` does not precede
+   `start`, `elapsed_ms` is not negative, and `elapsed_ms` matches the
+   `start`..`complete` window within the one second RFC3339 second-granularity
+   truncation can account for. `elapsed_ms` is the value every latency gate is
+   applied to, so a receipt understating it escapes a bound it visibly exceeded
+   while carrying the two timestamps that refute the claim;
+   (c) if the MAT is supplied, elapsed is within the bound the **MAT
+   authorizes** — the strictest `latency_bound` constraint it states. A receipt
+   declaring `max_ms = 0` (unbounded) under a MAT that states a bound **fails**,
+   as does one declaring a bound wider than authorized. Report **not performed**
+   where the MAT states no `latency_bound`. Delegation already refuses a child
+   that widens this bound (§8); verification refusing a receipt that ignores it
+   is the same rule at the other end.
+   Where `start` and `complete` are withheld, (b) is **not performed**.
 4. If the MAT is supplied: validate its signature and structure, and confirm the
-   receipt's artifact id binds to it.
+   receipt's artifact id binds to it. Confirm the MAT's signed issuer key id is
+   the key id that verified it — an artifact naming an issuer it was not issued
+   by is not a well-formed artifact, and a MAT that names no issuing key id
+   fails, since absence cannot excuse a binding check.
+   Confirm the receipt's evaluation `start` falls inside the MAT's validity
+   interval (¶0065). Both values are signed, so this asks no clock anything and
+   every verifier reaches the same answer; it is distinct from checking an
+   artifact against *now*, which depends on the verifier's clock and is
+   therefore a separate, caller-supplied lifecycle check.
 5. If the MAT is supplied and the receipt names the operation: **recompute the
    scope and boundary check** (¶0046, pipeline step 2). Confirm the receipt's
    `action` and `resource` fall within the MAT's execution scope and permission
@@ -214,10 +276,28 @@ public trust anchors — performs:
    one unconditional gate into an unverifiable assertion.
 6. If the reproduced context is supplied: recompute the context digest and
    compare; recompute each recorded constraint outcome and compare; check
-   decision consistency.
-7. If a prior receipt is supplied: confirm the chain link.
+   decision consistency. Report the outcome check as **not performed** where the
+   receipt records no outcome for some constraint the MAT states — withholding
+   is legitimate (¶0071, ¶0079) and is not the same claim as having been
+   checked. A receipt recording no outcomes at all agrees with everything it was
+   shown, having been shown nothing, and reporting that as passed asserts a gate
+   that was never applied. Decision consistency: a `permit` requires every
+   constraint to hold; a `deny` is consistent with any constraint state; a
+   `permit_with_controls` is consistent exactly when controls are named.
+7. If a prior receipt is supplied: confirm the chain link — the receipt's
+   `prior_hash` equals the prior receipt's **digest** (§7), not a hash of its
+   envelope.
 8. If a commitment is supplied: validate its signature, verify its binding to the
-   MAT, and confirm the receipt's commitment digest.
+   MAT, and confirm the receipt's commitment digest. Confirm the receipt's
+   evaluation `start` falls inside the commitment's `temporal_validity` and,
+   where declared, its `action_window` (¶0095B), by the same signed-values
+   reasoning as step 4; report **not performed** where the commitment declares
+   no such window.
+9. A receipt marked `speculative` records an evaluation **pending confirmation**
+   (¶0078) and is not a final authorization. A verifier **MUST** surface this
+   distinction rather than reporting the receipt as simply valid; the reference
+   verifier fails an explicit finality check and carries the flag in its result,
+   so a relying party that accepts speculative receipts does so deliberately.
 
 Verification succeeds using only the receipt, reproduced inputs, and public
 anchors — **never** enforcement point internal state (¶0017).
