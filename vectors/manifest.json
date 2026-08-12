@@ -289,42 +289,36 @@
     {
       "name": "receipt_replay_fresh",
       "kind": "receipt",
-      "description": "verifier holds a seen-set and has not seen this artifact before (field 138)",
+      "description": "relying party keeps a record of accepted receipts and has not acted on this one",
       "expect": "valid",
       "receipt_file": "receipt_replay.hex",
       "mat_file": "mat_root.hex",
-      "commitment_file": "commitment_A.hex",
       "replay": "fresh",
       "expect_checks": {
-        "commitment_session_unseen": "passed",
-        "replay_nonce_unseen": "passed"
+        "replay_receipt_unseen": "passed"
       }
     },
     {
       "name": "receipt_replay_unchecked",
       "kind": "receipt",
-      "description": "verifier keeps no seen-set, so freshness is not performed rather than assumed",
+      "description": "relying party keeps no record, so replay is not performed rather than assumed",
       "expect": "valid",
       "receipt_file": "receipt_replay.hex",
       "mat_file": "mat_root.hex",
-      "commitment_file": "commitment_A.hex",
       "expect_checks": {
-        "commitment_session_unseen": "not_performed",
-        "replay_nonce_unseen": "not_performed"
+        "replay_receipt_unseen": "not_performed"
       }
     },
     {
       "name": "receipt_replayed",
       "kind": "receipt",
-      "description": "verifier has already accepted this MAT nonce and commitment session",
+      "description": "this exact receipt has already been acted on; presenting it again is a replay",
       "expect": "invalid",
       "receipt_file": "receipt_replay.hex",
       "mat_file": "mat_root.hex",
-      "commitment_file": "commitment_A.hex",
       "replay": "seen",
       "expect_checks": {
-        "commitment_session_unseen": "failed",
-        "replay_nonce_unseen": "failed"
+        "replay_receipt_unseen": "failed"
       }
     },
     {
