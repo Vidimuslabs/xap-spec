@@ -175,6 +175,28 @@
       "context_file": "ctx_permit.json"
     },
     {
+      "name": "receipt_evaluated_after_expiry",
+      "kind": "receipt",
+      "description": "receipt records an evaluation four years after its governing MAT expired (¶0065)",
+      "expect": "invalid",
+      "receipt_file": "receipt_after_expiry.hex",
+      "mat_file": "mat_root.hex",
+      "expect_checks": {
+        "evaluation_within_validity": "failed"
+      }
+    },
+    {
+      "name": "receipt_evaluated_before_validity",
+      "kind": "receipt",
+      "description": "receipt records an evaluation before its governing MAT became valid (¶0065)",
+      "expect": "invalid",
+      "receipt_file": "receipt_before_valid.hex",
+      "mat_file": "mat_root.hex",
+      "expect_checks": {
+        "evaluation_within_validity": "failed"
+      }
+    },
+    {
       "name": "receipt_latency_unbounded",
       "kind": "receipt",
       "description": "receipt declares no latency bound under a MAT that authorizes 50ms (¶0088)",
@@ -346,6 +368,44 @@
       "expect": "valid",
       "mat_file": "mat_root.hex",
       "commitment_file": "commitment_A.hex"
+    },
+    {
+      "name": "receipt_commitment_expired",
+      "kind": "receipt",
+      "description": "receipt evaluated after its governing commitment's temporal validity ended (¶0095B)",
+      "expect": "invalid",
+      "receipt_file": "receipt_commit_expired.hex",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_expired.hex",
+      "expect_checks": {
+        "commitment_temporal": "failed"
+      }
+    },
+    {
+      "name": "receipt_commitment_no_window",
+      "kind": "receipt",
+      "description": "commitment declares no temporal validity, so the check is not performed rather than passed",
+      "expect": "valid",
+      "receipt_file": "receipt_commit_silent.hex",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_no_window.hex",
+      "expect_checks": {
+        "commitment_action_window": "not_performed",
+        "commitment_temporal": "not_performed"
+      }
+    },
+    {
+      "name": "receipt_outside_action_window",
+      "kind": "receipt",
+      "description": "receipt evaluated 2026-07-01, outside the commitment's 07-02..07-03 action window (¶0095B)",
+      "expect": "invalid",
+      "receipt_file": "receipt_commit_window.hex",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_action_window.hex",
+      "expect_checks": {
+        "commitment_action_window": "failed",
+        "commitment_temporal": "passed"
+      }
     },
     {
       "name": "commitment_binding_mismatch",
