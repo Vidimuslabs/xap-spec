@@ -175,6 +175,40 @@
       "context_file": "ctx_permit.json"
     },
     {
+      "name": "receipt_timing_self_contradictory",
+      "kind": "receipt",
+      "description": "elapsed_ms=5 across a 60s start..complete window (¶0053)",
+      "expect": "invalid",
+      "receipt_file": "receipt_timing_skewed.hex",
+      "mat_file": "mat_root.hex",
+      "expect_checks": {
+        "timing_self_consistent": "failed",
+        "timing_within_bound": "passed"
+      }
+    },
+    {
+      "name": "receipt_timing_undisclosed",
+      "kind": "receipt",
+      "description": "receipt withholds start and complete; self-consistency is not performed (¶0079)",
+      "expect": "valid",
+      "receipt_file": "receipt_timing_undisclosed.hex",
+      "expect_checks": {
+        "timing_self_consistent": "not_performed"
+      }
+    },
+    {
+      "name": "receipt_speculative",
+      "kind": "receipt",
+      "description": "speculative evaluation pending confirmation is not a final authorization (¶0078)",
+      "expect": "invalid",
+      "receipt_file": "receipt_speculative.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_permit.json",
+      "expect_checks": {
+        "receipt_final": "failed"
+      }
+    },
+    {
       "name": "receipt_evaluated_after_expiry",
       "kind": "receipt",
       "description": "receipt records an evaluation four years after its governing MAT expired (¶0065)",

@@ -298,6 +298,13 @@ components:
         valid: { type: boolean }
         artifact_id: { type: string }
         decision: { type: string, enum: [permit, deny, permit_with_controls] }
+        # A speculative evaluation is pending confirmation (¶0078), not an
+        # authorization to act on. It is surfaced here rather than left for a
+        # caller to dig out of the receipt, because "this was authorized" and
+        # "this was being considered" is the distinction a verification result
+        # exists to state. valid is false for a speculative receipt; a caller
+        # that accepts them does so by reading this field deliberately.
+        speculative: { type: boolean }
         checks:
           type: array
           items:
