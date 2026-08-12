@@ -429,6 +429,18 @@
       }
     },
     {
+      "name": "receipt_inside_action_window",
+      "kind": "receipt",
+      "description": "receipt evaluated inside the commitment's action window (¶0095B)",
+      "expect": "valid",
+      "receipt_file": "receipt_commit_in_window.hex",
+      "mat_file": "mat_root.hex",
+      "commitment_file": "commitment_in_window.hex",
+      "expect_checks": {
+        "commitment_action_window": "passed"
+      }
+    },
+    {
       "name": "receipt_outside_action_window",
       "kind": "receipt",
       "description": "receipt evaluated 2026-07-01, outside the commitment's 07-02..07-03 action window (¶0095B)",
@@ -573,6 +585,18 @@
         "receipt_prov_A.hex",
         "receipt_prov_B_broken.hex"
       ]
+    },
+    {
+      "name": "provenance_agrees_with_commitment",
+      "kind": "receipt",
+      "description": "Receipt provenance names the same parent as its governing commitment (¶0084A)",
+      "expect": "valid",
+      "receipt_file": "receipt_prov_agrees.hex",
+      "mat_file": "mat_child_valid.hex",
+      "commitment_file": "commitment_B.hex",
+      "expect_checks": {
+        "provenance_agreement": "passed"
+      }
     },
     {
       "name": "receipt_bad_signature",
