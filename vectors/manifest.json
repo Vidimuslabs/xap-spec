@@ -351,6 +351,55 @@
       }
     },
     {
+      "name": "receipt_confirms_speculative",
+      "kind": "receipt",
+      "description": "a confirming receipt settles the speculative evaluation it names (¶0078)",
+      "expect": "valid",
+      "receipt_file": "receipt_spec_confirmed.hex",
+      "mat_file": "mat_root.hex",
+      "confirmed_receipt_file": "receipt_spec.hex",
+      "expect_checks": {
+        "confirmation_link": "passed"
+      }
+    },
+    {
+      "name": "receipt_confirms_wrong_receipt",
+      "kind": "receipt",
+      "description": "a confirming receipt names a speculative receipt other than the one supplied",
+      "expect": "invalid",
+      "receipt_file": "receipt_spec_mismatch.hex",
+      "mat_file": "mat_root.hex",
+      "confirmed_receipt_file": "receipt_spec.hex",
+      "expect_checks": {
+        "confirmation_link": "failed"
+      }
+    },
+    {
+      "name": "receipt_confirms_nothing",
+      "kind": "receipt",
+      "description": "an ordinary receipt claims to confirm nothing; the check is not performed",
+      "expect": "valid",
+      "receipt_file": "receipt_permit.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_permit.json",
+      "expect_checks": {
+        "confirmation_link": "not_performed"
+      }
+    },
+    {
+      "name": "receipt_speculative_confirmation_failed",
+      "kind": "receipt",
+      "description": "the speculative precondition moved, so the permit is voided by a signed denial (¶0078)",
+      "expect": "valid",
+      "expect_code": "SPECULATIVE_CONFIRMATION_FAILURE",
+      "receipt_file": "receipt_spec_voided.hex",
+      "mat_file": "mat_root.hex",
+      "confirmed_receipt_file": "receipt_spec.hex",
+      "expect_checks": {
+        "confirmation_link": "passed"
+      }
+    },
+    {
       "name": "receipt_evaluated_after_expiry",
       "kind": "receipt",
       "description": "receipt records an evaluation four years after its governing MAT expired (¶0065)",

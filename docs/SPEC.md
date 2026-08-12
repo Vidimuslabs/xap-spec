@@ -323,8 +323,22 @@ public trust anchors — performs:
    disagreement means the commitment is not the one that artifact governs.
    Report **not performed** where either side discloses no identity.
 9. A receipt marked `speculative` records an evaluation **pending confirmation**
-   (¶0078) and is not a final authorization. A verifier **MUST** surface this
-   distinction rather than reporting the receipt as simply valid; the reference
+   (¶0078) and is not a final authorization. Confirmation **MUST** issue a
+   receipt: an ordinary chained, signed, non-speculative receipt naming the
+   speculative one it settles in `confirms`. Without that, "pending
+   confirmation" has nothing to be pending on, and the mode emits only artifacts
+   no verifier will accept.
+   A receipt is issued in **both** outcomes. Where the resource state still
+   holds, the confirming receipt carries the original decision; where it moved,
+   it carries `deny` with `SPECULATIVE_CONFIRMATION_FAILURE` (§10) — a race that
+   voided a permit is precisely the event an audit log exists to carry, and
+   reporting it only to the caller would leave the one interesting case
+   unrecorded. A receipt that settles a speculative evaluation is never itself
+   speculative, or confirmation could not terminate.
+   Where the confirmed receipt is supplied, a verifier confirms `confirms` names
+   its digest, that the confirmed receipt was speculative, and that this one is
+   not. A verifier **MUST** surface the speculative distinction rather than
+   reporting such a receipt as simply valid; the reference
    verifier fails an explicit finality check and carries the flag in its result,
    so a relying party that accepts speculative receipts does so deliberately.
 
@@ -452,6 +466,7 @@ record.
 | `COMMITMENT_SCOPE_VIOLATION` | declared set exceeds MAT scope/boundary (¶0095A) |
 | `COMMITMENT_ACTION_VIOLATION` | proposed action outside declared set (¶0083) |
 | `COMMITMENT_REVOCATION` | commitment revoked; all actions blocked (¶0083) |
+| `SPECULATIVE_CONFIRMATION_FAILURE` | a speculative evaluation was not confirmed: the resource state it read had moved by the time confirmation re-read it (¶0078) |
 
 ## 11. Registered cryptographic algorithms (¶0018, ¶0066)
 

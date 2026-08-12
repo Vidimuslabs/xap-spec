@@ -79,6 +79,17 @@ const (
 	// all further actions are blocked regardless of declared-set membership
 	// (¶0083 addition — Commitment Revocation Message).
 	CodeCommitmentRevocation = "COMMITMENT_REVOCATION"
+	// CodeSpeculativeConfirmationFailure: a speculative evaluation (¶0078) was
+	// not confirmed, because the resource state it read had changed by the time
+	// confirmation re-read it. The speculative permit is void and this code
+	// carries the reason.
+	//
+	// Distinct from CONSTRAINT_EVALUATION_FAILURE on purpose: that says a
+	// constraint did not hold when it was evaluated, this says the ground moved
+	// between evaluation and confirmation. A relying party reconstructing what
+	// happened needs to tell those apart, and an audit protocol that collapses
+	// them loses the only evidence that a race occurred.
+	CodeSpeculativeConfirmationFailure = "SPECULATIVE_CONFIRMATION_FAILURE"
 )
 
 // Codes returns the registered rationale/error/rejection codes in registry
@@ -95,6 +106,7 @@ func Codes() []string {
 		CodeCommitmentScopeViolation,
 		CodeCommitmentActionViolation,
 		CodeCommitmentRevocation,
+		CodeSpeculativeConfirmationFailure,
 	}
 }
 

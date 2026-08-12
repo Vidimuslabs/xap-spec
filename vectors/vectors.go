@@ -71,13 +71,17 @@ type Vector struct {
 	// (e.g. COMMITMENT_ACTION_VIOLATION).
 	ExpectCode string `json:"expect_code,omitempty"`
 	// File references and scenario parameters (relative to the data directory).
-	ReceiptFile      string   `json:"receipt_file,omitempty"`
-	MATFile          string   `json:"mat_file,omitempty"`
-	ParentMATFile    string   `json:"parent_mat_file,omitempty"`
-	CommitmentFile   string   `json:"commitment_file,omitempty"`
-	ContextFile      string   `json:"context_file,omitempty"`
-	PriorReceiptFile string   `json:"prior_receipt_file,omitempty"`
-	ReceiptFiles     []string `json:"receipt_files,omitempty"`
+	ReceiptFile      string `json:"receipt_file,omitempty"`
+	MATFile          string `json:"mat_file,omitempty"`
+	ParentMATFile    string `json:"parent_mat_file,omitempty"`
+	CommitmentFile   string `json:"commitment_file,omitempty"`
+	ContextFile      string `json:"context_file,omitempty"`
+	PriorReceiptFile string `json:"prior_receipt_file,omitempty"`
+	// ConfirmedReceiptFile is the speculative receipt a confirming receipt
+	// settles (¶0078), supplied so the runner can check the claim rather than
+	// read it.
+	ConfirmedReceiptFile string   `json:"confirmed_receipt_file,omitempty"`
+	ReceiptFiles         []string `json:"receipt_files,omitempty"`
 	// Replay selects the verifier-side seen-set a runner supplies (¶0017 forbids
 	// enforcement-point state, not the verifier's own):
 	//
