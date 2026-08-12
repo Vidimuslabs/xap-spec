@@ -369,6 +369,22 @@ verifier can check it, and the two are routinely confused, because a schema that
 carries a field implies someone evaluates it. An implementation **MUST NOT**
 report a field in this section as verified.
 
+**NOT PERFORMED belongs to a verifier lacking inputs, never to an artifact
+withholding what it was obliged to provide.** The distinction is load-bearing,
+because the party who benefits from a check not running is often the party who
+controls whether it can run — an agent signs its own commitment, an enforcement
+point its own receipt. Where an artifact declines to supply something the
+protocol requires of it, that **MUST** fail rather than report not performed;
+otherwise the weaker answer is a downgrade the signer selects. Concretely: a
+commitment governed by a MAT that names a machine identity must name one
+(¶0095B), and a commitment must declare its temporal validity. Selective
+disclosure (¶0071, ¶0079) is the legitimate case and stays not-performed — the
+distinction is whether the omitted value was owed.
+
+A verification result **SHOULD** name the checks it did not perform, so a relying
+party can require a minimum before acting. `valid` answers "was anything
+refuted", not "how much was established", and those diverge.
+
 The section is deliberately short. Most of what once sat here was unverifiable
 only because the protocol had not said what the field meant, or had not
 disclosed the input needed to reproduce it — both of which are fixable, and were

@@ -531,14 +531,14 @@
     {
       "name": "receipt_commitment_no_window",
       "kind": "receipt",
-      "description": "commitment declares no temporal validity, so the check is not performed rather than passed",
-      "expect": "valid",
+      "description": "commitment declares no temporal validity, which ¶0095B requires of it",
+      "expect": "invalid",
       "receipt_file": "receipt_commit_silent.hex",
       "mat_file": "mat_root.hex",
       "commitment_file": "commitment_no_window.hex",
       "expect_checks": {
         "commitment_action_window": "not_performed",
-        "commitment_temporal": "not_performed"
+        "commitment_temporal": "failed"
       }
     },
     {
@@ -593,11 +593,23 @@
     {
       "name": "commitment_agent_undisclosed",
       "kind": "receipt",
-      "description": "commitment discloses no agent identity; the binding is not performed rather than passed",
-      "expect": "valid",
+      "description": "MAT authorizes a specific identity and the commitment names none: the binding is defeated, not unavailable (¶0095B)",
+      "expect": "invalid",
       "receipt_file": "receipt_anon_agent.hex",
       "mat_file": "mat_root.hex",
       "commitment_file": "commitment_anon.hex",
+      "expect_checks": {
+        "agent_identity_binding": "failed"
+      }
+    },
+    {
+      "name": "commitment_agent_unbindable",
+      "kind": "receipt",
+      "description": "governing MAT names no machine identity, so there is nothing to bind and the check is not performed",
+      "expect": "valid",
+      "receipt_file": "receipt_open_identity.hex",
+      "mat_file": "mat_open_identity.hex",
+      "commitment_file": "commitment_open_identity.hex",
       "expect_checks": {
         "agent_identity_binding": "not_performed"
       }
