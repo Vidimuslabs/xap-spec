@@ -170,6 +170,55 @@
       "context_file": "ctx_permit.json"
     },
     {
+      "name": "receipt_permit_with_controls",
+      "kind": "receipt",
+      "description": "permit_with_controls naming the controls that compensate (¶0049)",
+      "expect": "valid",
+      "receipt_file": "receipt_controls.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_permit.json",
+      "expect_checks": {
+        "controls_declared": "passed",
+        "decision_consistent": "passed"
+      }
+    },
+    {
+      "name": "receipt_controls_missing",
+      "kind": "receipt",
+      "description": "permit_with_controls naming no control: the exemption without the thing that earns it (¶0049)",
+      "expect": "invalid",
+      "receipt_file": "receipt_controls_missing.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_permit.json",
+      "expect_checks": {
+        "controls_declared": "failed"
+      }
+    },
+    {
+      "name": "receipt_controls_on_plain_permit",
+      "kind": "receipt",
+      "description": "plain permit naming controls: controls belong to permit_with_controls (¶0049)",
+      "expect": "invalid",
+      "receipt_file": "receipt_controls_stray.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_permit.json",
+      "expect_checks": {
+        "controls_declared": "failed"
+      }
+    },
+    {
+      "name": "receipt_outcomes_withheld",
+      "kind": "receipt",
+      "description": "receipt records no constraint outcome; re-evaluation is not performed, not passed (¶0079)",
+      "expect": "valid",
+      "receipt_file": "receipt_no_outcomes.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_permit.json",
+      "expect_checks": {
+        "constraint_outcomes": "not_performed"
+      }
+    },
+    {
       "name": "receipt_chain_link",
       "kind": "receipt",
       "description": "prior_hash equals the prior receipt's digest, so the chain links (¶0063)",
