@@ -24,12 +24,22 @@ externalDocs:
   description: gRPC handshake service contract (proto/handshake.proto)
   url: https://github.com/Vidimuslabs/xap-spec/blob/main/proto/handshake.proto
 servers:
-  - url: "{scheme}://{host}/xap/v1"
+  - url: "{scheme}://{host}"
     description: >
       XAP is self-hosted: each operator runs their own instance and sets the host.
       There is no Vidimus-hosted endpoint. Replace {host} with your deployment's
       address (and {scheme} with http for local/dev). Issuance requires issuer
       authority; verification requires none.
+
+
+      Paths are served at the root, not under a version prefix. The protocol
+      version is negotiated in the Capability Message and carried, signature-
+      bound, in the `v` field of every artifact and receipt (¶0083) — so a
+      version segment in the URL would be a second and weaker channel for
+      something the signed payload already states, and one a proxy can rewrite.
+      An operator fronting the node with a gateway may of course mount it under
+      any prefix; that is a deployment choice, expressed by changing {host} and
+      the path prefix here, not a property of the protocol.
     variables:
       scheme:
         default: https
@@ -91,30 +101,202 @@ paths:
                 type: object
                 properties:
                   digest_hex: { type: string }
+  /revocations:
+    get:
+      summary: Fetch the revocation records for distribution (public, ¶0098)
+      operationId: listRevocations
+      description: >
+        Revocation is a public fact by design: a relying party must be able to
+        learn that an artifact is void without holding any authority, or the
+        revocation reaches only the parties who least need telling.
+      responses:
+        '200':
+          description: Revocation records
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Revocation' }
+  /metrics:
+    get:
+      summary: Enforcement metrics in Prometheus text format (public)
+      operationId: getMetrics
+      description: >
+        Decision counts, evaluation latency and degraded-mode entries. Carries no
+        artifact identifiers, so exposing it discloses volume, not authority.
+      responses:
+        '200':
+          description: Prometheus exposition format
+          content:
+            text/plain:
+              schema: { type: string }
+
+  # Issuance and enforcement. Every path below is behind the administrative
+  # chokepoint (bearer token); issuance additionally requires a current license,
+  # and delegation a licensed delegation feature. Enforcement and verification
+  # are NEVER license-gated — the fail-safe invariant: a lapsed license stops the
+  # minting of new authority and never stops a running enforcement point from
+  # honouring authority already issued.
   /artifacts:
     post:
-      summary: Issue a Machine Authority Token (issuer authority required — private)
+      summary: Issue a Machine Authority Token (admin + current license — private)
       operationId: issueArtifact
+      security: [{ adminBearer: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [mat_hex]
+              properties:
+                mat_hex: { type: string, description: canonical CBOR MAT payload (unsigned), hex }
       responses:
-        '201': { description: Issued MAT envelope (CBOR hex) }
-        '403': { description: Issuer authority required }
+        '201':
+          description: Issued artifact
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/IssuedArtifact' }
+        '401': { description: Administrative authority required }
+        '402': { description: A current license is required to issue new authority }
+  /artifacts/derive:
+    post:
+      summary: Derive a delegated child MAT (admin + delegation feature — private)
+      operationId: deriveArtifact
+      security: [{ adminBearer: [] }]
+      description: >
+        Applies the delegation invariants (FIG. 5, ¶0057) between the parent
+        envelope and the proposed child before signing: a child may only narrow.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [parent_hex, child_hex]
+              properties:
+                parent_hex: { type: string, description: signed parent MAT envelope, CBOR hex }
+                child_hex: { type: string, description: canonical CBOR child MAT payload (unsigned), hex }
+      responses:
+        '201':
+          description: Derived artifact
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/IssuedArtifact' }
+        '400': { description: The proposed child violates a delegation invariant }
+        '401': { description: Administrative authority required }
+        '402': { description: A current license is required to issue new authority }
+        '403': { description: The delegation feature is not licensed }
   /artifacts/{id}/revoke:
     post:
-      summary: Revoke an authority artifact (issuer authority required — private)
+      summary: Revoke an authority artifact (admin — private)
       operationId: revokeArtifact
+      security: [{ adminBearer: [] }]
+      description: >
+        Works in degraded (unlicensed or expired) mode. An operator must always
+        be able to withdraw authority, whatever the commercial state.
       parameters:
         - name: id
           in: path
           required: true
           schema: { type: string }
+        - name: reason
+          in: query
+          required: false
+          schema: { type: string }
+          description: Recorded verbatim in the distributed revocation record.
       responses:
-        '200': { description: Revocation recorded }
-        '403': { description: Issuer authority required }
+        '200':
+          description: Revocation recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  artifact_id: { type: string }
+                  state: { type: string, enum: [revoked] }
+        '401': { description: Administrative authority required }
+  /execute:
+    post:
+      summary: Evaluate an execution request and return the signed receipt (admin — private)
+      operationId: executeRequest
+      security: [{ adminBearer: [] }]
+      description: >
+        The enforcement pipeline (FIG. 4, ¶0044–0050). NEVER license-gated: a
+        license state must not stop an enforcement point from evaluating
+        requests against authority already issued. Every outcome — permit, deny
+        or permit-with-controls — yields a signed receipt (¶0050); a denial is
+        an answer, not an error, and is returned with 200.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ExecuteRequest' }
+      responses:
+        '200':
+          description: Decision and signed receipt
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ExecuteResponse' }
+        '401': { description: Administrative authority required }
+        '503': { description: This node runs no enforcement engine }
+  /receipts:
+    get:
+      summary: List the audit log's receipts (admin — private)
+      operationId: listReceipts
+      security: [{ adminBearer: [] }]
+      responses:
+        '200':
+          description: Receipt index, in insertion order
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    seq: { type: integer, format: int64 }
+                    id: { type: string }
+                    chain_hash: { type: string, description: the receipt's chain link digest, hex (¶0063) }
+        '401': { description: Administrative authority required }
+  /chain/verify:
+    get:
+      summary: Verify the audit log's chain integrity (admin — private)
+      operationId: verifyChain
+      security: [{ adminBearer: [] }]
+      description: >
+        Walks the log in insertion order and confirms each stored chain hash
+        still equals the digest of the receipt it indexes, and that each
+        receipt's declared prior hash equals its predecessor's — detecting
+        tampering, deletion and reordering (¶0063, FIG. 11). A broken chain is a
+        finding, not a request error, so it is reported with 200 and
+        `intact: false`.
+      responses:
+        '200':
+          description: Chain integrity result
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [intact]
+                properties:
+                  intact: { type: boolean }
+                  count: { type: integer, description: receipts walked; present when intact }
+                  error: { type: string, description: what broke; present when not intact }
+        '401': { description: Administrative authority required }
 
   # Handshake — HTTP binding of the transport-agnostic handshake state machine
   # (FIG. 3, ¶0043, ¶0092). The same handshake is available over gRPC; see
   # externalDocs (proto/handshake.proto). Envelopes and constraint sets are CBOR
   # hex; nonces are hex.
+  #
+  # Served by the enforcement point, which is where a session is established —
+  # NOT by the issuance/verification surface above. The reference implementation
+  # ships this binding in the xap-engine library, which an enforcement point
+  # mounts on its own listener; the reference self-hosted node does not currently
+  # expose it. So a client generated from this document reaches the handshake at
+  # whatever address the enforcement point serves, which need not be the address
+  # serving /verify.
   /handshake/capability:
     post:
       tags: [handshake]
@@ -259,6 +441,16 @@ paths:
               schema: { $ref: '#/components/schemas/HandshakeStateResponse' }
         '404': { description: Unknown session }
 components:
+  securitySchemes:
+    adminBearer:
+      type: http
+      scheme: bearer
+      description: >
+        The administrative chokepoint every private route passes through. The
+        reference node compares a bearer secret in constant time; an operator may
+        substitute any authenticator. It authorizes ADMINISTRATION of this node,
+        and is not, and never substitutes for, the authority a MAT carries — the
+        signed artifact remains what an operation is evaluated against.
   parameters:
     Sid:
       name: sid
@@ -267,6 +459,63 @@ components:
       schema: { type: string }
       description: Handshake session identifier.
   schemas:
+    Revocation:
+      type: object
+      description: A distributed revocation record (¶0098).
+      properties:
+        artifact_id: { type: string }
+        reason: { type: string, description: recorded verbatim from the revoking call }
+        at: { type: string, format: date-time }
+        signature_hex: { type: string, description: issuer signature over the record, hex; absent when unsigned }
+    IssuedArtifact:
+      type: object
+      properties:
+        artifact_id: { type: string }
+        envelope_hex: { type: string, description: the signed COSE_Sign1 MAT envelope, CBOR hex }
+    ExecuteRequest:
+      type: object
+      required: [mat, action, resource, context]
+      properties:
+        mat: { type: string, description: signed COSE_Sign1 MAT envelope, CBOR hex }
+        action: { type: string }
+        resource: { type: string }
+        impact: { type: integer, format: int64, description: measured against the boundary's max_impact (¶0046) }
+        privilege_delta: { type: integer, format: int64, description: measured against max_privilege_delta (¶0046) }
+        context: { $ref: '#/components/schemas/RuntimeContext' }
+        evidence:
+          type: array
+          description: Machine integrity evidence answering the MAT's proof obligations (¶0048).
+          items:
+            type: object
+            required: [category, data_hex, produced_at]
+            properties:
+              category: { type: string }
+              data_hex: { type: string }
+              produced_at: { type: string, format: date-time }
+        resource_keys:
+          type: array
+          description: >
+            The resource-state variables the receipt's resource_state_digest
+            covers (¶0054). Without them the digest is unreproducible, so
+            supplying the digest and withholding these makes the check
+            not-performed rather than passed.
+          items: { type: string }
+        risk_threshold: { type: integer }
+        receipt_id: { type: string, description: caller-chosen id for the receipt this evaluation produces }
+    ExecuteResponse:
+      type: object
+      properties:
+        decision: { type: string, enum: [permit, deny, permit_with_controls] }
+        receipt_id: { type: string }
+        receipt_hex: { type: string, description: the signed COSE_Sign1 receipt envelope, CBOR hex }
+        controls:
+          type: array
+          description: Execution controls applied, for permit_with_controls (¶0049).
+          items: { type: string }
+        rationale:
+          type: array
+          description: Rationale/error/rejection codes, signature-bound in the receipt (¶0084; SPEC.md §10).
+          items: { type: string }
     HandshakeState:
       type: string
       description: Handshake state machine states (¶0092).
@@ -298,6 +547,18 @@ components:
         valid: { type: boolean }
         artifact_id: { type: string }
         decision: { type: string, enum: [permit, deny, permit_with_controls] }
+        # Every check the supplied inputs did not permit re-evaluating, by name.
+        #
+        # valid answers "was anything refuted", not "how much was established",
+        # and those diverge: a receipt disclosing almost nothing is valid because
+        # nothing contradicted it. Where the party who benefits from a check not
+        # running is the party who controls whether it can run — the MAT, the
+        # context and the prior receipt are all verifier inputs chosen by whoever
+        # presents the receipt — not-performed is a downgrade they select. So a
+        # relying party needs the shape of what went unchecked without walking
+        # checks[] itself, and needs to be able to require a minimum before
+        # acting. Omitted when empty: absent means every check ran.
+        not_performed: { type: array, items: { type: string } }
         # A speculative evaluation is pending confirmation (¶0078), not an
         # authorization to act on. It is surfaced here rather than left for a
         # caller to dig out of the receipt, because "this was authorized" and
