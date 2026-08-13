@@ -400,14 +400,28 @@ report a field in this section as verified.
 omitted.** Not performed, passed and failed are the three answers; silence is not
 a fourth. A result that simply lacks an entry cannot be distinguished from one
 that passed, so dropping an unrunnable check hands the presenting party a way to
-remove a gate by withholding an input rather than fail it. Concretely: supplying
-a commitment obliges an implementation to report every check §9 step 8 names,
-including those it cannot reproduce because the governing MAT was not supplied.
+remove a gate by withholding an input rather than fail it.
+
+**The subject of a check is whoever made the claim it tests, not every artifact
+the computation touches.** The scope check reads the governing MAT, but the claim
+under examination — that this action was within authority — is the *receipt's*.
+So it is the receipt's presence that obliges the check to be reported, and the
+MAT is merely the input needed to reach a verdict on it. A receipt is always
+supplied, therefore **every check testing a receipt-carried claim is reported for
+every verification**, reading `not performed` where an input it needed was
+absent. Where the MAT is not supplied that covers, at minimum, the artifact
+binding, the scope check, evidence coverage and freshness, the authorized latency
+bound, the policy digest, evaluation-within-validity, the reproduced constraint
+outcomes and decision consistency; where the reproduced context is not supplied,
+the context digest and the resource-state digest; where the prior receipt is not
+supplied, the chain link.
 
 This does not oblige an implementation to emit checks about artifacts nobody
-supplied — a receipt presented alone makes no commitment claims to report. The
-rule bites where a claim IS presented and the input needed to reproduce it is
-the one thing left out.
+supplied. A receipt presented alone makes no commitment claims, so §9 step 8's
+checks have no subject and are absent rather than not-performed; likewise the
+MAT's own signature is the MAT's claim about itself, and there is none to report
+when no MAT was given. The rule bites where a claim IS presented and the input
+needed to reproduce it is the one thing left out.
 
 **NOT PERFORMED belongs to a verifier lacking inputs, never to an artifact
 withholding what it was obliged to provide.** The distinction is load-bearing,

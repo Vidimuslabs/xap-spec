@@ -166,6 +166,27 @@
       }
     },
     {
+      "name": "receipt_alone_reports_the_unreproducible",
+      "kind": "receipt",
+      "description": "The same receipt presented with NO governing MAT, context or prior receipt: every claim it carries that cannot be reproduced is reported not_performed rather than omitted, so Valid is not read as full assurance (§9.1)",
+      "expect": "valid",
+      "receipt_file": "receipt_permit.hex",
+      "expect_checks": {
+        "artifact_binding": "not_performed",
+        "scope_check": "not_performed",
+        "evaluation_within_validity": "not_performed",
+        "policy_digest": "not_performed",
+        "timing_within_authorized_bound": "not_performed",
+        "evidence_covers_obligations": "not_performed",
+        "evidence_asserted_fresh": "not_performed",
+        "context_digest": "not_performed",
+        "resource_state_digest": "not_performed",
+        "constraint_outcomes": "not_performed",
+        "decision_consistent": "not_performed",
+        "chain_link": "not_performed"
+      }
+    },
+    {
       "name": "receipt_deny",
       "kind": "receipt",
       "description": "Valid deny receipt carrying a signature-bound rationale code (¶0046, ¶0084)",
