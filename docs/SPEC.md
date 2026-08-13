@@ -490,6 +490,72 @@ given the artifacts and the public anchors, can reach a conclusion — not wheth
 anything currently checks it. Every field that failed that test for a fixable
 reason has been fixed.
 
+### 9.2 Check name registry
+
+The steps above say what to check; a verification result has to say which check
+answered. Those names travel — they are the `name` field of every entry in a
+result, and the entries a relying party names when it requires a minimum before
+acting — so they are protocol vocabulary and belong here, in the same way the
+rationale codes of §10 do. Two implementations agreeing on every verdict and
+disagreeing on what to call them are not interchangeable to anything consuming
+the result.
+
+The registry is append-only within a major version, like §10.
+
+**Subject** is the artifact whose claim the check tests, which decides whether it
+is reported at all: a receipt is always supplied, so every receipt-subject check
+is reported for every verification, reading NOT PERFORMED where an input was
+missing (§9.1). A MAT-subject or commitment-subject check is *absent* when that
+artifact was not presented, because nobody made the claim.
+
+**May report NOT PERFORMED** marks the checks whose inputs may not permit
+reaching a verdict. Each one must be pinned as `not_performed` by a conformance
+vector: the distinction between not-performed and passed produces a receipt that
+verifies either way, so nothing weaker can hold an implementation to it.
+
+| Check | Subject | Step | May report NOT PERFORMED | Tests |
+|-------|---------|------|--------------------------|-------|
+| `receipt_signature` | receipt | 1 | | the receipt verifies against an anchor registered for the enforcement-point role |
+| `receipt_version` | receipt | 2 | | `v` is this protocol version |
+| `decision_valid` | receipt | 2 | | `decision` is a registered ternary value (¶0049) |
+| `rationale_codes_known` | receipt | 2 | | every carried code is in the §10 registry |
+| `controls_declared` | receipt | 2 | | `permit_with_controls` names ≥1 control, and no other decision names any |
+| `receipt_final` | receipt | 2 | | the receipt records a settled decision, not one pending confirmation (¶0078) |
+| `enforcement_point_binding` | receipt | 2 | ✓ (no subject on the anchor) | the declared enforcement point matches the identity the operator registered for the signing key |
+| `replay_receipt_unseen` | receipt | 2 | ✓ (no relying-party record) | this receipt is not one the relying party already acted on |
+| `timing_self_consistent` | receipt | 3 | ✓ (start or complete withheld) | `complete` ≥ `start`, `elapsed_ms` ≥ 0 and agrees with the window |
+| `timing_within_bound` | receipt | 3 | | `elapsed_ms` is within the bound the receipt itself declares |
+| `timing_within_authorized_bound` | receipt | 3 | ✓ (no MAT) | `elapsed_ms` is within the strictest `latency_bound` the MAT authorizes |
+| `mat_signature` | MAT | 4 | | the MAT verifies against an anchor registered for the issuer role |
+| `artifact_binding` | receipt | 4 | ✓ (no MAT) | `artifact_id` names the MAT presented as governing |
+| `evaluation_within_validity` | receipt | 4 | ✓ (no MAT) | evaluation fell inside the MAT's validity interval |
+| `policy_digest` | receipt | 4 | ✓ (no MAT) | `policy_digest` equals the digest of the MAT's portable constraint set (¶0087) |
+| `scope_check` | receipt | 5 | ✓ (no MAT, or the receipt withholds action/resource) | the decided operation was within the MAT's scope and boundary (¶0046) |
+| `evidence_covers_obligations` | receipt | 5 | ✓ (no MAT) | the evidence refs answer every proof obligation the MAT states (¶0048) |
+| `evidence_asserted_fresh` | receipt | 5 | ✓ (no MAT) | each evidence ref is asserted fresh within its obligation's `max_age_seconds` |
+| `context_digest` | receipt | 6 | ✓ (no reproduced context) | `context_digest` equals the digest of the reproduced context |
+| `resource_state_digest` | receipt | 6 | ✓ (no context, or no `resource_keys`) | the digest recomputes over the variables `resource_keys` names (¶0054) |
+| `constraint_outcomes` | receipt | 7 | ✓ (no MAT or no context) | each recorded outcome matches an independent evaluation, and the MAT states constraints to evaluate |
+| `decision_consistent` | receipt | 7 | ✓ (no MAT or no context) | the decision follows from the reproduced outcomes |
+| `chain_link` | receipt | 7 | ✓ (no prior receipt) | `prior_hash` equals the prior receipt's digest (¶0063) |
+| `confirmation_link` | receipt | 7 | ✓ (not a confirming receipt, or the settled one withheld) | `confirms` names the speculative receipt supplied (¶0078) |
+| `commitment_signature` | commitment | 8 | | the commitment verifies against an anchor registered for the agent role |
+| `commitment_digest` | receipt | 8 | | `commitment_digest` equals the digest of the commitment presented as governing |
+| `commitment_binding` | commitment | 8 | ✓ (no MAT) | `binding.constraint_digest` equals the governing MAT's constraint digest (¶0084A) |
+| `commitment_scope` | commitment | 8 | ✓ (no MAT) | the declared set narrows the MAT rather than exceeding it (¶0095A) |
+| `agent_identity_binding` | commitment | 8 | ✓ (no MAT) | the commitment's agent identity is the one the MAT authorizes |
+| `commitment_temporal` | commitment | 8 | | the commitment declares a temporal validity and evaluation falls inside it |
+| `commitment_action_window` | commitment | 8 | ✓ (no action window declared) | the action fell inside the declared window |
+| `compliance_commitment_check` | receipt | 8 | | the receipt's `commitment_check` claim matches recomputation from the commitment |
+| `compliance_scope_check` | receipt | 8 | ✓ (no MAT) | the receipt's `scope_check` claim matches recomputation |
+| `compliance_boundary_check` | receipt | 8 | ✓ (no MAT) | the receipt's `boundary_check` claim matches recomputation |
+| `provenance_agreement` | receipt | 8 | | the receipt's provenance matches the governing commitment's (¶0084A) |
+
+`constraint_outcome`, the fourth boolean of `commitment_compliance`, has no entry
+of its own: it needs the runtime context and is reproduced by
+`constraint_outcomes` above. A registry entry for it would name a second check
+doing the first one's work.
+
 ## 10. Rationale / error / rejection code registry (¶0084 addition)
 
 All codes appearing in a receipt are signature-bound and part of the verifiable
