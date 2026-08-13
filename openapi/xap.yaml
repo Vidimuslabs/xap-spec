@@ -297,13 +297,26 @@ paths:
   # externalDocs (proto/handshake.proto). Envelopes and constraint sets are CBOR
   # hex; nonces are hex.
   #
-  # Served by the enforcement point, which is where a session is established —
-  # NOT by the issuance/verification surface above. The reference implementation
-  # ships this binding in the xap-engine library, which an enforcement point
-  # mounts on its own listener; the reference self-hosted node does not currently
-  # expose it. So a client generated from this document reaches the handshake at
-  # whatever address the enforcement point serves, which need not be the address
-  # serving /verify.
+  # Served by the enforcement point, which is where a session is established. The
+  # reference self-hosted node is a complete node — issuer, enforcement point,
+  # audit and verification in one image — so it serves these alongside the paths
+  # above, at the same address. An enforcement point built by embedding the
+  # xap-engine binding directly may of course serve them elsewhere.
+  #
+  # No security scheme, deliberately: the handshake is where a peer PRESENTS its
+  # authority, so requiring authority to begin one would be circular. What the
+  # conveyed artifact permits is decided by the enforcement pipeline, not by
+  # reaching these endpoints.
+  #
+  # A session is in-flight state held by the server, so the table holding it is
+  # bounded — sessions expire and the count is capped. An implementation MUST NOT
+  # keep unbounded per-session state for an endpoint that needs no authority to
+  # call: an unauthenticated caller would otherwise choose how much the server
+  # remembers. A session that has expired is reported as unknown (404 / NOT_FOUND)
+  # rather than as a distinct expired state, which would disclose to an
+  # unauthenticated caller which session ids have been issued; the peer restarts
+  # the handshake. A server declining to hold more sessions answers 503 (gRPC
+  # RESOURCE_EXHAUSTED).
   /handshake/capability:
     post:
       tags: [handshake]
