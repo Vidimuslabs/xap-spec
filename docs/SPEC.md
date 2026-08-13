@@ -313,7 +313,20 @@ public trust anchors — performs:
    `prior_hash` equals the prior receipt's **digest** (§7), not a hash of its
    envelope.
 8. If a commitment is supplied: validate its signature, verify its binding to the
-   MAT, and confirm the receipt's commitment digest. Confirm the receipt's
+   MAT, and confirm the receipt's commitment digest. Confirm that every operation
+   the commitment declares is one the governing MAT authorizes — a commitment
+   narrows the authority it binds to and may declare less than was granted, never
+   more (¶0095A) — under the same asymmetry as step 5: an over-claiming
+   commitment fails a receipt that **permitted** under it, while a `deny` is the
+   enforcement point doing what ¶0095A requires and stays consistent.
+   Where the governing MAT is **not supplied**, every check above that reproduces
+   a claim against it — the binding, the scope narrowing, and the MAT-dependent
+   compliance recomputations — is reported **not performed**. It is **NOT**
+   omitted: an absent check and a passed check are indistinguishable in a result,
+   so omission lets whoever presents the receipt delete a gate by withholding an
+   input rather than fail it. A check reproducible from the commitment alone
+   still runs; needing *some* artifact is not the same as needing *this* one.
+   Confirm the receipt's
    evaluation `start` falls inside the commitment's `temporal_validity` and,
    where declared, its `action_window` (¶0095B), by the same signed-values
    reasoning as step 4; report **not performed** where the commitment declares
@@ -382,6 +395,19 @@ A field being signed means the issuer committed to it. It does not mean a
 verifier can check it, and the two are routinely confused, because a schema that
 carries a field implies someone evaluates it. An implementation **MUST NOT**
 report a field in this section as verified.
+
+**Once a check's subject artifact is supplied, that check is reported, never
+omitted.** Not performed, passed and failed are the three answers; silence is not
+a fourth. A result that simply lacks an entry cannot be distinguished from one
+that passed, so dropping an unrunnable check hands the presenting party a way to
+remove a gate by withholding an input rather than fail it. Concretely: supplying
+a commitment obliges an implementation to report every check §9 step 8 names,
+including those it cannot reproduce because the governing MAT was not supplied.
+
+This does not oblige an implementation to emit checks about artifacts nobody
+supplied — a receipt presented alone makes no commitment claims to report. The
+rule bites where a claim IS presented and the input needed to reproduce it is
+the one thing left out.
 
 **NOT PERFORMED belongs to a verifier lacking inputs, never to an artifact
 withholding what it was obliged to provide.** The distinction is load-bearing,

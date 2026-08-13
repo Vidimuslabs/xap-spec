@@ -771,6 +771,33 @@
       "commitment_file": "commitment_overclaim.hex"
     },
     {
+      "name": "commitment_overclaim_no_mat",
+      "kind": "receipt",
+      "description": "Same over-claiming commitment presented WITHOUT the governing MAT: the scope claim cannot be reproduced, so it must report not_performed rather than vanish (¶0095A)",
+      "expect": "valid",
+      "receipt_file": "receipt_permit_overclaim.hex",
+      "commitment_file": "commitment_overclaim.hex",
+      "expect_checks": {
+        "commitment_binding": "not_performed",
+        "commitment_scope": "not_performed"
+      }
+    },
+    {
+      "name": "commitment_compliance_no_mat",
+      "kind": "receipt",
+      "description": "Compliance claims presented WITHOUT the governing MAT: the two MAT-dependent recomputations report not_performed, while the commitment-only one still catches the false claim (¶0084A)",
+      "expect": "invalid",
+      "receipt_file": "receipt_compliance_lie.hex",
+      "commitment_file": "commitment_A.hex",
+      "expect_checks": {
+        "commitment_binding": "not_performed",
+        "commitment_scope": "not_performed",
+        "compliance_scope_check": "not_performed",
+        "compliance_boundary_check": "not_performed",
+        "compliance_commitment_check": "failed"
+      }
+    },
+    {
       "name": "commitment_compliance_false_claim",
       "kind": "receipt",
       "description": "Receipt claims commitment and scope checks passed for an action outside both (¶0084A)",
