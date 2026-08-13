@@ -42,6 +42,25 @@ func TestOperationsRecoversTheDocument(t *testing.T) {
 	}
 }
 
+// TestBasePathIsRecovered guards the other half of the address.
+//
+// The paths block says which surfaces exist; the server URL says where they are.
+// A parity check that compares only the first passes while every route sits at
+// the wrong prefix, because each individual path still matches.
+func TestBasePathIsRecovered(t *testing.T) {
+	base, err := BasePath()
+	if err != nil {
+		t.Fatalf("BasePath: %v", err)
+	}
+	if base != "/xap/v1" {
+		t.Errorf("base path = %q, want %q — if the document's server URL changed "+
+			"deliberately, every implementation's mount point changes with it", base, "/xap/v1")
+	}
+	if strings.HasSuffix(base, "/") {
+		t.Errorf("base path %q has a trailing slash; joining it to a path would double the separator", base)
+	}
+}
+
 func contains(ops []Operation, want string) bool {
 	for _, o := range ops {
 		if o.String() == want {

@@ -24,7 +24,7 @@ externalDocs:
   description: gRPC handshake service contract (proto/handshake.proto)
   url: https://github.com/Vidimuslabs/xap-spec/blob/main/proto/handshake.proto
 servers:
-  - url: "{scheme}://{host}"
+  - url: "{scheme}://{host}/xap/v1"
     description: >
       XAP is self-hosted: each operator runs their own instance and sets the host.
       There is no Vidimus-hosted endpoint. Replace {host} with your deployment's
@@ -32,14 +32,18 @@ servers:
       authority; verification requires none.
 
 
-      Paths are served at the root, not under a version prefix. The protocol
-      version is negotiated in the Capability Message and carried, signature-
-      bound, in the `v` field of every artifact and receipt (¶0083) — so a
-      version segment in the URL would be a second and weaker channel for
-      something the signed payload already states, and one a proxy can rewrite.
-      An operator fronting the node with a gateway may of course mount it under
-      any prefix; that is a deployment choice, expressed by changing {host} and
-      the path prefix here, not a property of the protocol.
+      Every path below is served under the `/xap/v1` base. The prefix is not a
+      second version channel — the protocol version is negotiated in the
+      Capability Message and carried signature-bound in the `v` field of every
+      artifact and receipt (¶0083), and that remains the authority on which
+      protocol an artifact belongs to. The prefix is an ADDRESSING decision, and
+      it earns its place at the boundary rather than in the payload: a
+      self-hosted node is routinely fronted by a gateway that also carries other
+      services, and a surface mounted at the root claims `/verify` and `/metrics`
+      for XAP on whatever host it lands on. Reserving one namespace instead of a
+      dozen root paths is what makes the node mountable without negotiating with
+      its neighbours, and it leaves room for a `/xap/v2` to be served beside a
+      `/xap/v1` during a migration rather than in place of it.
     variables:
       scheme:
         default: https
@@ -157,8 +161,8 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/IssuedArtifact' }
-        '401': { description: Administrative authority required }
         '402': { description: A current license is required to issue new authority }
+        '403': { description: Administrative authority required (deliberately generic — the reason is not leaked) }
   /artifacts/derive:
     post:
       summary: Derive a delegated child MAT (admin + delegation feature — private)
@@ -184,9 +188,12 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/IssuedArtifact' }
         '400': { description: The proposed child violates a delegation invariant }
-        '401': { description: Administrative authority required }
         '402': { description: A current license is required to issue new authority }
-        '403': { description: The delegation feature is not licensed }
+        # One status, two causes, and the response body is what separates them:
+        # administrative authority is refused generically so the reason is not
+        # leaked, while an unlicensed feature names itself. A caller must read the
+        # body rather than infer from the code.
+        '403': { description: Administrative authority required, or the delegation feature is not licensed }
   /artifacts/{id}/revoke:
     post:
       summary: Revoke an authority artifact (admin — private)
@@ -215,7 +222,7 @@ paths:
                 properties:
                   artifact_id: { type: string }
                   state: { type: string, enum: [revoked] }
-        '401': { description: Administrative authority required }
+        '403': { description: Administrative authority required (deliberately generic — the reason is not leaked) }
   /execute:
     post:
       summary: Evaluate an execution request and return the signed receipt (admin — private)
@@ -238,7 +245,7 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ExecuteResponse' }
-        '401': { description: Administrative authority required }
+        '403': { description: Administrative authority required (deliberately generic — the reason is not leaked) }
         '503': { description: This node runs no enforcement engine }
   /receipts:
     get:
@@ -258,7 +265,7 @@ paths:
                     seq: { type: integer, format: int64 }
                     id: { type: string }
                     chain_hash: { type: string, description: the receipt's chain link digest, hex (¶0063) }
-        '401': { description: Administrative authority required }
+        '403': { description: Administrative authority required (deliberately generic — the reason is not leaked) }
   /chain/verify:
     get:
       summary: Verify the audit log's chain integrity (admin — private)
@@ -283,7 +290,7 @@ paths:
                   intact: { type: boolean }
                   count: { type: integer, description: receipts walked; present when intact }
                   error: { type: string, description: what broke; present when not intact }
-        '401': { description: Administrative authority required }
+        '403': { description: Administrative authority required (deliberately generic — the reason is not leaked) }
 
   # Handshake — HTTP binding of the transport-agnostic handshake state machine
   # (FIG. 3, ¶0043, ¶0092). The same handshake is available over gRPC; see

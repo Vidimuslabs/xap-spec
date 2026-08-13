@@ -31,6 +31,35 @@ var spec []byte
 // Spec returns the raw OpenAPI document.
 func Spec() []byte { return spec }
 
+// BasePath returns the path portion of the server URL template — the prefix
+// every path in the document is served under (e.g. "/xap/v1").
+//
+// It is separated from the host because the two are settled by different
+// parties. The host is the operator's: XAP is self-hosted and there is no
+// address to publish. The base path is the protocol's, and an implementation
+// serving paths at a different prefix is serving a surface no generated client
+// reaches — which is the same defect as omitting a route, one level up, and
+// invisible in a per-path comparison because every individual path still
+// matches.
+func BasePath() (string, error) {
+	const marker = "  - url: "
+	for _, ln := range strings.Split(string(spec), "\n") {
+		if !strings.HasPrefix(ln, marker) {
+			continue
+		}
+		url := strings.Trim(strings.TrimSpace(strings.TrimPrefix(ln, marker)), `"'`)
+		// Cut the scheme/host template, which is the operator's to set. What is
+		// left is the prefix the document commits to.
+		i := strings.Index(url, "}/")
+		if i < 0 {
+			// A server URL with no host variable declares no path either.
+			return "", nil
+		}
+		return strings.TrimSuffix(url[i+1:], "/"), nil
+	}
+	return "", fmt.Errorf("openapi: no server url in the document")
+}
+
 // Operation is one declared HTTP operation: an uppercase method and the path
 // template it is declared under (e.g. "POST /artifacts/{id}/revoke").
 type Operation struct {
