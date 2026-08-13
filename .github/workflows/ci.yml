@@ -35,6 +35,15 @@ jobs:
       - name: build
         run: go build ./...
 
+      # This module stopped being pure data when it began exposing the parts of
+      # the specification an implementation is held to — the OpenAPI's
+      # operations, §9.2's check registry. Those scanners are what downstream
+      # gates compare against, so a broken one does not fail: it certifies
+      # agreement with a document it never read. Their guards live here, in the
+      # module that owns the documents, and have to run here.
+      - name: test
+        run: go test -race ./...
+
       - name: govulncheck
         run: |
           go install golang.org/x/vuln/cmd/govulncheck@latest
