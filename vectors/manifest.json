@@ -173,17 +173,17 @@
       "receipt_file": "receipt_permit.hex",
       "expect_checks": {
         "artifact_binding": "not_performed",
-        "scope_check": "not_performed",
-        "evaluation_within_validity": "not_performed",
-        "policy_digest": "not_performed",
-        "timing_within_authorized_bound": "not_performed",
-        "evidence_covers_obligations": "not_performed",
-        "evidence_asserted_fresh": "not_performed",
-        "context_digest": "not_performed",
-        "resource_state_digest": "not_performed",
+        "chain_link": "not_performed",
         "constraint_outcomes": "not_performed",
+        "context_digest": "not_performed",
         "decision_consistent": "not_performed",
-        "chain_link": "not_performed"
+        "evaluation_within_validity": "not_performed",
+        "evidence_asserted_fresh": "not_performed",
+        "evidence_covers_obligations": "not_performed",
+        "policy_digest": "not_performed",
+        "resource_state_digest": "not_performed",
+        "scope_check": "not_performed",
+        "timing_within_authorized_bound": "not_performed"
       }
     },
     {
@@ -813,9 +813,9 @@
       "expect_checks": {
         "commitment_binding": "not_performed",
         "commitment_scope": "not_performed",
-        "compliance_scope_check": "not_performed",
         "compliance_boundary_check": "not_performed",
-        "compliance_commitment_check": "failed"
+        "compliance_commitment_check": "failed",
+        "compliance_scope_check": "not_performed"
       }
     },
     {
