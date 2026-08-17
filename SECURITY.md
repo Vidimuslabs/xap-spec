@@ -97,6 +97,22 @@ enforcement engine and server are not published and are not in scope.
 Also out of scope: volumetric denial of service, social engineering of Vidimus
 Labs staff or contractors, and physical attacks.
 
+**Resource exhaustion — where the line sits, because the two sides of it look
+alike.** A single input that makes a parse, decode or verify path allocate without
+bound, recurse without bound, or hang **is in scope**, and we would like to hear
+about it: that is a defect in the artifact, or an under-specification in this
+document that permits one, and either is ours to fix. Sending enough well-formed
+traffic to exhaust a node **is not** — availability under load is a property of how
+a deployment is provisioned, and no bound inside a process answers a distributed
+source.
+
+That distinction has an owner, and the specification names it: the `servers` block
+states that *"XAP is self-hosted: each operator runs their own instance and sets
+the host. There is no Vidimus-hosted endpoint."* So availability belongs to the
+operator's ingress — rate limiting, a WAF, L3/L4 filtering, redundant replicas.
+The node's own in-process bounds, and what they deliberately do not cover, are
+documented for operators alongside the server distribution.
+
 ## Recognition
 
 Reporters who wish to be credited are acknowledged by name in the release notes
