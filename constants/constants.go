@@ -90,6 +90,26 @@ const (
 	// happened needs to tell those apart, and an audit protocol that collapses
 	// them loses the only evidence that a race occurred.
 	CodeSpeculativeConfirmationFailure = "SPECULATIVE_CONFIRMATION_FAILURE"
+
+	// Race disposition codes (¶0055). Conflict resolution under the race
+	// policies serializes, backs off, or denies both, and each disposition is
+	// recorded in the receipt with the codes below. Every conflict resolution
+	// carries CodeRaceConditionDetected; the second code names the policy's
+	// disposition. Registered 2026-08-18 (CF-xap-74): the engine emitted these
+	// from its first race implementation while the registry did not know them,
+	// so every race receipt failed independent SDK verification — the engine
+	// and the public verifier disagreed by construction. The registry is
+	// append-only within a major version; this is that append.
+	CodeRaceConditionDetected = "RACE_CONDITION_DETECTED"
+	// CodeRaceSerializedEarliest: under PolicySerializeEarliest the later
+	// request yields to the earlier one (¶0055).
+	CodeRaceSerializedEarliest = "RACE_SERIALIZED_EARLIEST"
+	// CodeRaceBackoffRetry: under PolicyBackoff the losing request is denied
+	// with an instruction to retry after the backoff window (¶0055).
+	CodeRaceBackoffRetry = "RACE_BACKOFF_RETRY"
+	// CodeRaceDenyBoth: under PolicyDenyBoth neither conflicting request is
+	// permitted (¶0055).
+	CodeRaceDenyBoth = "RACE_DENY_BOTH"
 )
 
 // Codes returns the registered rationale/error/rejection codes in registry
@@ -107,6 +127,10 @@ func Codes() []string {
 		CodeCommitmentActionViolation,
 		CodeCommitmentRevocation,
 		CodeSpeculativeConfirmationFailure,
+		CodeRaceConditionDetected,
+		CodeRaceSerializedEarliest,
+		CodeRaceBackoffRetry,
+		CodeRaceDenyBoth,
 	}
 }
 

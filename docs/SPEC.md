@@ -573,6 +573,10 @@ record.
 | `COMMITMENT_ACTION_VIOLATION` | proposed action outside declared set (¶0083) |
 | `COMMITMENT_REVOCATION` | commitment revoked; all actions blocked (¶0083) |
 | `SPECULATIVE_CONFIRMATION_FAILURE` | a speculative evaluation was not confirmed: the resource state it read had moved by the time confirmation re-read it (¶0078) |
+| `RACE_CONDITION_DETECTED` | two concurrent requests conflicted on shared resource state; every race disposition carries this code alongside the policy's disposition code (¶0055) |
+| `RACE_SERIALIZED_EARLIEST` | conflict resolved by serialization: the later request yielded to the earlier one (¶0055) |
+| `RACE_BACKOFF_RETRY` | conflict resolved by backoff: the losing request was denied with an instruction to retry (¶0055) |
+| `RACE_DENY_BOTH` | conflict resolved by denying both requests (¶0055) |
 
 ## 11. Registered cryptographic algorithms (¶0018, ¶0066)
 
