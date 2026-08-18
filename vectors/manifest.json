@@ -120,6 +120,14 @@
       "parent_mat_file": "mat_root.hex"
     },
     {
+      "name": "delegation_resource_traversal_mixed",
+      "kind": "delegation",
+      "description": "Child resource pattern escapes the parent scope using mixed / and \\ separators, invisible to a single-separator traversal check (invariant i, ¶0057; CF-xap-67)",
+      "expect": "invalid",
+      "mat_file": "mat_child_traversal_mixed.hex",
+      "parent_mat_file": "mat_root.hex"
+    },
+    {
       "name": "delegation_quota_dropped",
       "kind": "delegation",
       "description": "Child drops a resource quota its parent set (invariant ii, ¶0057)",
@@ -418,6 +426,58 @@
       "confirmed_receipt_file": "receipt_spec.hex",
       "expect_checks": {
         "confirmation_link": "passed"
+      }
+    },
+    {
+      "name": "receipt_race_serialized",
+      "kind": "receipt",
+      "description": "conflict on shared resource state resolved by serialization: the later request yields (¶0055)",
+      "expect": "valid",
+      "expect_code": "RACE_SERIALIZED_EARLIEST",
+      "receipt_file": "receipt_race_serialize.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_permit.json",
+      "expect_checks": {
+        "rationale_codes_known": "passed"
+      }
+    },
+    {
+      "name": "receipt_race_backoff",
+      "kind": "receipt",
+      "description": "conflict resolved by backoff: the losing request is denied with an instruction to retry (¶0055)",
+      "expect": "valid",
+      "expect_code": "RACE_BACKOFF_RETRY",
+      "receipt_file": "receipt_race_backoff.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_permit.json",
+      "expect_checks": {
+        "rationale_codes_known": "passed"
+      }
+    },
+    {
+      "name": "receipt_race_deny_both",
+      "kind": "receipt",
+      "description": "conflict resolved by denying both requests (¶0055)",
+      "expect": "valid",
+      "expect_code": "RACE_DENY_BOTH",
+      "receipt_file": "receipt_race_denyboth.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_permit.json",
+      "expect_checks": {
+        "rationale_codes_known": "passed"
+      }
+    },
+    {
+      "name": "receipt_race_detected",
+      "kind": "receipt",
+      "description": "a conflict was detected and recorded; the policy added no second disposition code (¶0055)",
+      "expect": "valid",
+      "expect_code": "RACE_CONDITION_DETECTED",
+      "receipt_file": "receipt_race_detected.hex",
+      "mat_file": "mat_root.hex",
+      "context_file": "ctx_permit.json",
+      "expect_checks": {
+        "rationale_codes_known": "passed"
       }
     },
     {
