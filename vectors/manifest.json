@@ -122,7 +122,7 @@
     {
       "name": "delegation_resource_traversal_mixed",
       "kind": "delegation",
-      "description": "Child resource pattern escapes the parent scope using mixed / and \\ separators, invisible to a single-separator traversal check (invariant i, ¶0057; CF-xap-67)",
+      "description": "Child resource pattern escapes the parent scope using mixed / and \\ separators, invisible to a single-separator traversal check (invariant i, ¶0057)",
       "expect": "invalid",
       "mat_file": "mat_child_traversal_mixed.hex",
       "parent_mat_file": "mat_root.hex"

@@ -95,7 +95,7 @@ const (
 	// policies serializes, backs off, or denies both, and each disposition is
 	// recorded in the receipt with the codes below. Every conflict resolution
 	// carries CodeRaceConditionDetected; the second code names the policy's
-	// disposition. Registered 2026-08-18 (CF-xap-74): the engine emitted these
+	// disposition. Registered 2026-08-18: the engine emitted these
 	// from its first race implementation while the registry did not know them,
 	// so every race receipt failed independent SDK verification — the engine
 	// and the public verifier disagreed by construction. The registry is

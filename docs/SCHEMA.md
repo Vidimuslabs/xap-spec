@@ -1,8 +1,7 @@
 # XAP `xap-1.0.0` — Frozen Schema
 
-**Status: FROZEN at end of Session 1.** This document is the wire-schema contract
-for protocol version `xap-1.0.0`. The engine and server build against exactly
-these structures. Changes to a frozen field (rename, retype, reorder-semantics,
+**Status: FROZEN.** This document is the wire-schema contract for protocol
+version `xap-1.0.0`. Implementations build against exactly these structures. Changes to a frozen field (rename, retype, reorder-semantics,
 removal) require a new protocol version string; new *optional* fields may be added
 within a major version only if they are `omitempty` and absent from all existing
 canonical vectors' digests. This mirrors the frozen-schema discipline used for
