@@ -44,6 +44,17 @@ jobs:
       - name: test
         run: go test -race ./...
 
+      # Multi-lang HTTP clients (clients/) — coverage of every OpenAPI
+      # operationId plus Python/TS unit tests. Not crypto verification (xap-go).
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: "20"
+      - name: clients
+        run: |
+          cd clients/typescript && npm ci || npm install
+          cd ../..
+          ./clients/scripts/test-all.sh
+
       - name: govulncheck
         run: |
           go install golang.org/x/vuln/cmd/govulncheck@latest

@@ -31,6 +31,9 @@ recomputing digests — with no access to the enforcement point.
 - [`openapi/`](openapi/) — OpenAPI definition of the verification and issuance
   API surface.
 - [`proto/`](proto/) — the transport-agnostic handshake contract (gRPC).
+- [`clients/`](clients/) — multi-language **HTTP API clients** (Python, TypeScript)
+  covering every OpenAPI `operationId`. Thin node drivers — cryptographic
+  verification remains [xap-go](https://github.com/Vidimuslabs/xap-go).
 - [`provenance/`](provenance/) — the image-signing public key and verification guide.
 
 ## Verify against the spec
