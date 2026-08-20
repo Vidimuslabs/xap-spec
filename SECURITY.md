@@ -32,7 +32,13 @@ would like to know if you can find:
   reproduce** — anything an independent party is told to check but cannot.
 
 The reference verifier is [xap-go](https://github.com/Vidimuslabs/xap-go);
-`xap vectors run` replays every vector here against it.
+you need **both** repos. From xap-go: `go test ./...` and
+`go run ./cmd/xap vectors run` replay every vector here against it. Read
+xap-go's `SECURITY.md` for the implementation attack surface and the full list
+of adversarial tests already in tree.
+
+**Do not probe live Vidimus hosts** (including `vidimuslabs.com/verify`). Safe
+harbor does not cover production infrastructure — attack a local checkout.
 
 ## Reporting a vulnerability
 
@@ -87,12 +93,12 @@ verification, incorrect or under-constrained conformance vectors, or spec and
 schema issues with security consequences are especially welcome. The reference
 verifier lives in [xap-go](https://github.com/Vidimuslabs/xap-go).
 
-**Out of scope, and please do not test against them:** Vidimus Labs production
-infrastructure, including `vidimuslabs.com`, `api.vidimuslabs.com`, any
-`*.vidimuslabs.com` host, and the DNS and edge configuration behind them. These
-are live systems serving real traffic; attacking them is not authorized by this
-policy and the safe harbor above does not extend to them. The private
-enforcement engine and server are not published and are not in scope.
+**Out of scope — do not test these (safe harbor does not cover them):**
+
+- Any live Vidimus host: `vidimuslabs.com`, `api.vidimuslabs.com`,
+  `*.vidimuslabs.com`, and DNS/edge configuration behind them (including the
+  public `/verify` page — use a local xap-go / WASM build instead).
+- The private enforcement engine and server (not published; not this invite).
 
 Also out of scope: volumetric denial of service, social engineering of Vidimus
 Labs staff or contractors, and physical attacks.
