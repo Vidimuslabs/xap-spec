@@ -2,3 +2,7 @@ bin/
 dist/
 *.test
 .DS_Store
+clients/**/node_modules/
+clients/**/dist/
+clients/**/__pycache__/
+clients/**/*.egg-info/
