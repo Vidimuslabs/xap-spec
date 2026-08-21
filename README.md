@@ -57,14 +57,16 @@ patent-pending.
 
 ## License
 
-Specification content is licensed **CC-BY-4.0**. XAP is patent-pending and
-intended to be **royalty-free to implement** — see
-[`LICENSE.md`](LICENSE.md) for the scope of that position, the trademark
-reservation, and the as-is disclaimer, and
-[vidimuslabs.com/ip](https://vidimuslabs.com/ip) for the public statement. The
-formal grant instrument is in preparation; until then that position describes
-intent rather than an executed grant. No freedom-to-operate clearance is given
-or implied.
+Specification content is licensed **CC-BY-4.0**. XAP is patent-pending. Vidimus
+Labs **intends** to make implementation of XAP available under a **royalty-free
+patent covenant** (final terms pending counsel review) — see
+[`LICENSE.md`](LICENSE.md) and the public statement at
+[vidimuslabs.com/ip](https://vidimuslabs.com/ip). Covered XAP patent rights are
+as defined in the final covenant. The covenant does not extend to AGIV, CVEAR,
+or AIRAP (separate provisional patent filings). It does not make Vidimus Labs
+software open source. Until the covenant is published, website and LICENSE
+language describe intent rather than an executed grant. No freedom-to-operate
+clearance is given or implied.
 
 ---
 

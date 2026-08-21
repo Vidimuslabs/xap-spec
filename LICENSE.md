@@ -22,13 +22,35 @@ Protocol) specification, Yandeh Holdings Inc., licensed under CC-BY-4.0."*
 
 ## Patents
 
-XAP is patent-pending. Vidimus Labs is a software company and does not license
-patents for revenue: **XAP is intended to be royalty-free to implement**. That
-position, and its scope, is stated at <https://vidimuslabs.com/ip>. It is
-intended to reach the claims necessary to implement XAP wherever in the XAP
-patent family they sit — the foundational application, its continuations and
-divisional, and any patents issuing from them. It does not extend to AGIV,
-CVEAR, or AIRAP, whose claims are not necessary to implement XAP.
+XAP (also denominated AMIAP — Autonomous Machine Identity and Authority
+Protocol) is patent-pending. The public intellectual-property statement is at
+<https://vidimuslabs.com/ip>.
+
+Vidimus Labs intends to make implementation of XAP available under a
+**royalty-free patent covenant**. Subject to the final terms of that covenant,
+Vidimus Labs intends to covenant not to assert covered XAP patent claims
+against conforming implementations of XAP. **Covered XAP patent rights** means
+the claims necessary to implement XAP itself — execution-time enforcement and
+associated cryptographic proof structures — **as defined in the final XAP
+Patent Covenant**, not a broader public promise than that instrument contains.
+
+Until the covenant is published, this statement describes **intent** rather than
+an executed grant, and no license or covenant should be inferred from it. If you
+need written assurance before that lands, contact research@vidimuslabs.com.
+
+**The patent covenant and Vidimus Labs software licensing are separate.** The
+covenant concerns permission under specified patent rights to implement XAP. It
+does not make Vidimus Labs’ source code, binaries, containers, documentation,
+services, or other proprietary materials open source or royalty-free. Vidimus
+Labs’ production XAP implementation is proprietary, commercially licensed
+software. Patent permission is not copyright or source-code permission. XAP is
+not open source.
+
+**AGIV, CVEAR, and AIRAP are not included.** They are separately developed
+protocols associated with separate provisional patent filings and separate
+implementation rights. Technical interoperability with XAP does not merge patent
+families or licensing terms. The planned XAP royalty-free patent covenant does
+not extend to them.
 
 Two things follow, and both matter:
 
@@ -36,17 +58,18 @@ Two things follow, and both matter:
    § 2(b)(2), patent and trademark rights are not licensed under it. The patent
    position above is stated separately and deliberately, in the same way a
    standards body separates its copyright license from its patent policy.
-2. **The formal grant instrument is in preparation.** Until it is published, the
-   statement above describes intent rather than an executed grant, and no
-   license or covenant should be inferred from it. If you need written
-   assurance before that lands, contact research@vidimuslabs.com.
+2. **The formal grant instrument is in preparation.** Final covenant terms —
+   including words such as “conforming,” “covered claims,” “assert,” and any
+   defensive-termination conditions — will be set by counsel and published at
+   <https://vidimuslabs.com/ip>.
 
 ## Trademarks
 
-"XAP", "Vidimus Labs", "Lenzuz", "AGIV", "CVEAR", and "AIRAP" are trademarks of
-their respective owners and are **not** licensed by this file. Anyone may
-implement the protocol; describing an implementation as XAP requires
-conformance with the vectors in this repository.
+“Vidimus Labs,” “Lenzuz,” “AGIV,” “CVEAR,” and “AIRAP” are trademarks of their
+respective owners and are **not** licensed by this file. “XAP” is the name of
+the Execution Authority Protocol; describing an implementation as XAP requires
+conformance with the vectors in this repository. This file does not grant
+trademark rights in any name.
 
 ## No warranty
 
@@ -57,9 +80,10 @@ To the extent permitted by law, Yandeh Holdings Inc. and Vidimus Labs LLC
 disclaim all liability arising from use of this material, including any direct,
 indirect, incidental, special, exemplary, or consequential damages.
 
-**No freedom-to-operate clearance is given or implied.** The royalty-free
-position covers the XAP patent family only. It says nothing about patents held
-by third parties, which may read on an implementation of this or any other
-protocol. Implementers are responsible for their own analysis.
+**No freedom-to-operate clearance is given or implied.** The planned royalty-free
+position covers covered XAP patent rights only, as defined in the final
+covenant. It says nothing about patents held by third parties, which may read on
+an implementation of this or any other protocol. Implementers are responsible
+for their own analysis.
 
 Nothing here is legal advice.
