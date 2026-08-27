@@ -103,5 +103,4 @@ Phase 5 multi-lang slice · protocol `xap-1.0.0` · self-hosted only · patent-p
 
 ---
 
-Protected by U.S. Patent No. [PENDING ISSUANCE — 19/570,167] and pending applications.
-www.vidimuslabs.com/patents
+Patent pending. Portfolio notice: https://www.vidimuslabs.com/ip

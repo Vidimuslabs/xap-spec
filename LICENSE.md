@@ -26,31 +26,34 @@ XAP (also denominated AMIAP — Autonomous Machine Identity and Authority
 Protocol) is patent-pending. The public intellectual-property statement is at
 <https://vidimuslabs.com/ip>.
 
-Vidimus Labs intends to make implementation of XAP available under a
-**royalty-free patent covenant**. Subject to the final terms of that covenant,
-Vidimus Labs intends to covenant not to assert covered XAP patent claims
-against conforming implementations of XAP. **Covered XAP patent rights** means
-the claims necessary to implement XAP itself — execution-time enforcement and
-associated cryptographic proof structures — **as defined in the final XAP
-Patent Covenant**, not a broader public promise than that instrument contains.
+### The patent pledge (intent)
+
+You should be free to implement XAP without paying us for the patents we hold on
+it. Vidimus Labs intends a **royalty-free patent pledge** (also called the XAP
+Patent Covenant): subject to the final terms of that instrument, we intend not
+to assert covered XAP patent claims against conforming implementations of XAP.
+
+**Covered XAP patent rights** means the claims necessary to implement XAP itself
+— execution-time enforcement and associated cryptographic proof structures — **as
+defined in the final XAP Patent Covenant**, not a broader public promise than
+that instrument contains.
 
 Until the covenant is published, this statement describes **intent** rather than
 an executed grant, and no license or covenant should be inferred from it. If you
 need written assurance before that lands, contact research@vidimuslabs.com.
 
-**The patent covenant and Vidimus Labs software licensing are separate.** The
-covenant concerns permission under specified patent rights to implement XAP. It
-does not make Vidimus Labs’ source code, binaries, containers, documentation,
-services, or other proprietary materials open source or royalty-free. Vidimus
-Labs’ production XAP implementation is proprietary, commercially licensed
-software. Patent permission is not copyright or source-code permission. XAP is
-not open source.
+**The patent pledge and Vidimus Labs software licensing are separate.** The
+pledge is about patents. It does not make Vidimus Labs’ source code, binaries,
+containers, documentation, services, or other proprietary materials open source
+or royalty-free. Vidimus Labs’ production XAP implementation is proprietary,
+commercially licensed software. Patent permission is not copyright or
+source-code permission. XAP is not open source.
 
 **AGIV, CVEAR, and AIRAP are not included.** They are separately developed
 protocols associated with separate provisional patent filings and separate
-implementation rights. Technical interoperability with XAP does not merge patent
-families or licensing terms. The planned XAP royalty-free patent covenant does
-not extend to them.
+implementation rights. Working with XAP does not merge patent families or
+licensing terms. The planned XAP royalty-free patent pledge does not extend to
+them.
 
 Two things follow, and both matter:
 
