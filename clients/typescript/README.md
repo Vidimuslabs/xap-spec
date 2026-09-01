@@ -16,4 +16,4 @@ const admin = new Client("http://localhost:8080/xap/v1", {
 console.log(await admin.verifyChain());
 ```
 
-Uses global `fetch` (Node 18+). See the parent [README](../README.md).
+Uses global `fetch` (Node 22+). See the parent [README](../README.md).
