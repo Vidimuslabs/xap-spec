@@ -7,13 +7,7 @@ on:
   schedule:
     - cron: '27 3 * * 1'
 
-# CodeQL dataflow analysis. Results are saved as a SARIF artifact rather than
-# uploaded to code scanning, so this runs on a PRIVATE repo without GitHub Advanced
-# Security. `actions: read` lets CodeQL read workflow-run metadata; `upload: false`
-# and `upload-database: false` avoid the code-scanning API (which needs GHAS on
-# private repos). Once this repo is PUBLIC (free) or GHAS is enabled, switch to
-# native Security-tab scanning: set `upload: true`, remove `output:` + the
-# upload-artifact step.
+# CodeQL dataflow analysis, uploaded to the Security tab (public-repo CodeQL).
 permissions:
   actions: read
   contents: read
@@ -34,12 +28,3 @@ jobs:
         uses: github/codeql-action/analyze@08d09a53f0f5d694f253bd25732e4429c9e9337f # v3
         with:
           category: "/language:go"
-          upload: false
-          upload-database: false
-          output: codeql-results
-      - name: Upload SARIF artifact
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: codeql-sarif
-          path: codeql-results
-          if-no-files-found: warn
