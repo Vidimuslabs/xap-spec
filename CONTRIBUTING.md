@@ -29,4 +29,5 @@ See [`SECURITY.md`](SECURITY.md). Report vulnerabilities to
 
 ## License
 
-Specification content is CC-BY-4.0. See [`LICENSE.md`](LICENSE.md).
+Specification content is CC-BY-4.0. See [`LICENSE`](LICENSE) and
+[`NOTICE.md`](NOTICE.md).

@@ -5,7 +5,7 @@
 [![wire schema](https://img.shields.io/badge/wire_schema-frozen-2D5F4F?style=flat-square&labelColor=475569)](docs/SCHEMA.md)
 [![signatures](https://img.shields.io/badge/signatures-hybrid_post--quantum-2D5F4F?style=flat-square&labelColor=475569)](docs/SPEC.md)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.21144476-2D5F4F?style=flat-square&labelColor=475569)](https://doi.org/10.5281/zenodo.21144476)
-[![spec license](https://img.shields.io/badge/spec-CC--BY--4.0-2D5F4F?style=flat-square&labelColor=475569)](LICENSE.md)
+[![spec license](https://img.shields.io/badge/spec-CC--BY--4.0-2D5F4F?style=flat-square&labelColor=475569)](LICENSE)
 
 The normative specification, protocol constants, and canonical conformance
 vectors for the **Execution Authority Protocol (XAP)**, protocol version
@@ -57,12 +57,13 @@ patent-pending.
 
 ## License
 
-Specification content is licensed **CC-BY-4.0**. XAP is patent-pending. Vidimus
-Labs **intends** a **royalty-free patent pledge** so others can implement XAP
-under covered XAP patent rights without a royalty to us (final terms pending
-counsel) — see [`LICENSE.md`](LICENSE.md) and
+Specification content is licensed **CC-BY-4.0** — see [`LICENSE`](LICENSE) and
+[`NOTICE.md`](NOTICE.md). XAP is patent-pending. Vidimus Labs **intends** a
+humanitarian **covenant not to sue** so others can implement XAP under covered
+XAP patent claims without us asserting those claims (final terms, including
+export-control conditions, pending counsel) — see [`NOTICE.md`](NOTICE.md) and
 [vidimuslabs.com/ip](https://www.vidimuslabs.com/ip). Covered rights are as
-defined in the final covenant. The pledge does not extend to AGIV, CVEAR, or
+defined in the final instrument. The covenant does not extend to AGIV, CVEAR, or
 AIRAP (separate provisional filings). It does not make Vidimus Labs software
 open source. Until the covenant is published, this language is intent, not an
 executed grant. No freedom-to-operate clearance is given or implied.
