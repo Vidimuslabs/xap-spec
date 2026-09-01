@@ -18,10 +18,10 @@
     "test": "npm run build && node --test dist/client.test.js"
   },
   "devDependencies": {
-    "@types/node": "^20.11.0",
+    "@types/node": "^22.15.0",
     "typescript": "^5.4.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   }
 }
