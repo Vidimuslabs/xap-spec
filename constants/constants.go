@@ -43,6 +43,38 @@ func (d Decision) Valid() bool {
 	}
 }
 
+// IdentityKind is the discriminant of a machine identity (field 122): it names
+// HOW a machine's identity is established, and therefore what evidence the
+// identity's other fields must carry.
+type IdentityKind string
+
+const (
+	// IdentityKindPublicKey: the identity is a raw public key (field public_key).
+	IdentityKindPublicKey IdentityKind = "public_key"
+	// IdentityKindCertRef: the identity is a reference to a certificate
+	// (field cert_ref).
+	IdentityKindCertRef IdentityKind = "cert_ref"
+	// IdentityKindAttestation: the identity is bound to hardware attestation
+	// evidence (field attestation, FIG. 7 ¶0059).
+	IdentityKindAttestation IdentityKind = "attestation"
+	// IdentityKindComposite: the identity is a composite of several anchors
+	// (field composite).
+	IdentityKindComposite IdentityKind = "composite"
+)
+
+// Valid reports whether k is a recognized machine-identity kind. A kind outside
+// this set is not a machine identity this protocol version defines; a verifier
+// that treated an unknown kind as acceptable would be asserting a discriminant
+// it does not understand.
+func (k IdentityKind) Valid() bool {
+	switch k {
+	case IdentityKindPublicKey, IdentityKindCertRef, IdentityKindAttestation, IdentityKindComposite:
+		return true
+	default:
+		return false
+	}
+}
+
 // Canonical rationale, error, and rejection codes (¶0084 addition). Every code
 // that appears in a receipt is bound by the enforcement point's signature and
 // forms part of the independently verifiable proof record. The registry is

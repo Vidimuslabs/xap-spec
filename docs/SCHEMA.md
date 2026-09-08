@@ -41,6 +41,16 @@ exclusions?}`; `TrustVector{score?, level?}`; `ProofObligation{category,
 max_age_seconds}`; `DelegationRights{allowed, max_depth}`; `IssuerIdentity{id,
 kid?}`; `ReplayProtection{not_before, not_after, nonce, instance_id}`.
 
+`MachineIdentity.kind` is one of `"public_key"`, `"cert_ref"`, `"attestation"`,
+or `"composite"`, and it is not decorative: it names which of the other fields
+carries the identity, so it MUST agree with the material present. `kind`
+`"public_key"` requires `public_key`; `"cert_ref"` requires `cert_ref`;
+`"attestation"` requires `attestation`; `"composite"` requires a non-empty
+`composite`. A `kind` outside this set, or a `kind` whose corresponding field is
+absent, is a malformed identity and MUST be rejected — a relying party reads
+`kind` to learn how a machine proved itself, so a `kind` the material does not
+support is a claim with no backing.
+
 `ExecutionScope.unconstrained` names the dimensions a scope deliberately does
 not restrict — `"actions"`, `"resources"`, or both. **An absent scope list
 permits nothing; permitting a whole dimension requires naming it here.**
