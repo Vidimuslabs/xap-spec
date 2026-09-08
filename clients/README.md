@@ -99,8 +99,8 @@ xap-clients/
 
 ## Status
 
-Phase 5 multi-lang slice · protocol `xap-1.0.0` · self-hosted only · patent-pending.
+Phase 5 multi-lang slice · protocol `xap-1.0.0` · self-hosted only · U.S. Patent No. US-12,726,364-B1.
 
 ---
 
-Patent pending. Portfolio notice: https://www.vidimuslabs.com/ip
+U.S. Patent No. US-12,726,364-B1 (issued September 1, 2026). Portfolio notice: https://www.vidimuslabs.com/ip

@@ -81,8 +81,8 @@ under this policy, we will make that authorization clear.
 
 The specification content is CC-BY-4.0, so analysing, quoting, and republishing
 it — including in a paper that demonstrates a flaw — is already permitted. XAP
-is patent-pending; see [`LICENSE`](LICENSE) and [`NOTICE.md`](NOTICE.md) for the
-licensing position.
+is covered by U.S. Patent No. US-12,726,364-B1 (issued September 1, 2026); see
+[`LICENSE`](LICENSE) and [`NOTICE.md`](NOTICE.md) for the licensing position.
 
 ## Scope
 

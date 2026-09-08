@@ -53,12 +53,13 @@ See [`CITATION.cff`](CITATION.cff).
 ## Status
 
 Reference specification · protocol `xap-1.0.0` (frozen) · hybrid post-quantum ·
-patent-pending.
+U.S. Patent No. US-12,726,364-B1.
 
 ## License
 
 Specification content is licensed **CC-BY-4.0** — see [`LICENSE`](LICENSE) and
-[`NOTICE.md`](NOTICE.md). XAP is patent-pending. Vidimus Labs **intends** a
+[`NOTICE.md`](NOTICE.md). XAP is protected by U.S. Patent No. US-12,726,364-B1
+(issued September 1, 2026). Vidimus Labs **intends** a
 humanitarian **covenant not to sue** so others can implement XAP under covered
 XAP patent claims without us asserting those claims (final terms, including
 export-control conditions, pending counsel) — see [`NOTICE.md`](NOTICE.md) and
@@ -70,4 +71,4 @@ executed grant. No freedom-to-operate clearance is given or implied.
 
 ---
 
-Patent pending. Portfolio notice: [vidimuslabs.com/ip](https://www.vidimuslabs.com/ip).
+U.S. Patent No. US-12,726,364-B1 (issued September 1, 2026). Portfolio notice: [vidimuslabs.com/ip](https://www.vidimuslabs.com/ip).

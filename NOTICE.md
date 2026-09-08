@@ -17,8 +17,9 @@ Inc., licensed under CC-BY-4.0."*
 ## Patents — planned humanitarian covenant not to sue (intent)
 
 XAP (also denominated AMIAP — Autonomous Machine Identity and Authority
-Protocol) is patent-pending. The public intellectual-property statement is at
-<https://vidimuslabs.com/ip>.
+Protocol) is protected by U.S. Patent No. US-12,726,364-B1, issued
+September 1, 2026 from application 19/570,167. The public intellectual-property
+statement is at <https://vidimuslabs.com/ip>.
 
 Vidimus Labs intends a **humanitarian covenant not to sue**: we intend not to
 bring an action for infringement of covered XAP patent claims against a
